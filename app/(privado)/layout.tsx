@@ -14,6 +14,7 @@ const MENU: { href: string; label: string; roles?: Rol[] }[] = [
   { href: "/", label: "Inicio" },
   { href: "/estado-cuenta", label: "Estado de cuenta", roles: ["RESIDENTE"] },
   { href: "/visitas", label: "Visitas", roles: ["RESIDENTE"] },
+  { href: "/reportes", label: "Mis reportes", roles: ["RESIDENTE"] },
   { href: "/admin/areas", label: "Áreas comunes", roles: ["ADMINISTRADOR"] },
 ];
 
