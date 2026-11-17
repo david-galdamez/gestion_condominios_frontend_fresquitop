@@ -2,6 +2,7 @@ import "server-only";
 import { apiFetch } from "@/lib/api";
 import type {
   Autorizacion,
+  CambiosAutorizacion,
   NuevaAutorizacion,
   UnidadMia,
 } from "@/lib/types/visitas";
@@ -52,8 +53,8 @@ async function llamar<T>(
 const esAutorizacion = (x: unknown): x is Autorizacion =>
   !!x && typeof (x as Autorizacion).id === "string" && "codigo" in (x as object);
 
-const json = (body: unknown): RequestInit => ({
-  method: "POST",
+const json = (body: unknown, method = "POST"): RequestInit => ({
+  method,
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify(body),
 });
@@ -78,5 +79,19 @@ export const cancelarAutorizacion = (id: string) =>
   llamar<Autorizacion>(
     `autorizaciones/${encodeURIComponent(id)}/cancelar`,
     { method: "PATCH" },
+    (b) => (esAutorizacion(b) ? b : null),
+  );
+
+export const getAutorizacion = (id: string) =>
+  llamar<Autorizacion>(
+    `autorizaciones/${encodeURIComponent(id)}`,
+    undefined,
+    (b) => (esAutorizacion(b) ? b : null),
+  );
+
+export const editarAutorizacion = (id: string, datos: CambiosAutorizacion) =>
+  llamar<Autorizacion>(
+    `autorizaciones/${encodeURIComponent(id)}`,
+    json(datos, "PATCH"),
     (b) => (esAutorizacion(b) ? b : null),
   );

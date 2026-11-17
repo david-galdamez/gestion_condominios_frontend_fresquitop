@@ -2,14 +2,16 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const crear = vi.fn();
 const cancelar = vi.fn();
+const editar = vi.fn();
 const revalidatePath = vi.fn();
 vi.mock("@/lib/visitas", () => ({
   crearAutorizacion: (...a: unknown[]) => crear(...a),
   cancelarAutorizacion: (...a: unknown[]) => cancelar(...a),
+  editarAutorizacion: (...a: unknown[]) => editar(...a),
 }));
 vi.mock("next/cache", () => ({ revalidatePath: (p: string) => revalidatePath(p) }));
 
-import { cancelarVisita, crearVisita } from "./visitas";
+import { cancelarVisita, crearVisita, editarVisita } from "./visitas";
 
 function fd(over: Record<string, string> = {}) {
   const f = new FormData();
@@ -31,6 +33,7 @@ const idle = { status: "idle" as const };
 beforeEach(() => {
   crear.mockReset();
   cancelar.mockReset();
+  editar.mockReset();
   revalidatePath.mockReset();
   vi.useFakeTimers();
   vi.setSystemTime(new Date("2026-11-04T18:00:00Z"));
@@ -100,5 +103,47 @@ describe("cancelarVisita", () => {
   it("403", async () => {
     cancelar.mockResolvedValue({ status: "forbidden" });
     expect((await cancelarVisita("a1"))).toEqual({ ok: false, error: "No tienes permiso para esta acción" });
+  });
+});
+
+describe("editarVisita (H07b)", () => {
+  it("valida igual que al crear y no llama a la API", async () => {
+    const r = await editarVisita("a1", "111111", idle, fd({ numeroDocumento: "123" }));
+    expect(r.errores?.numeroDocumento).toBe(
+      "El número de documento no tiene el formato correcto",
+    );
+    expect(editar).not.toHaveBeenCalled();
+  });
+
+  it("envía sin unidad, placa vacía como null, y marca código nuevo", async () => {
+    editar.mockResolvedValue({ status: "ok", data: { id: "a1", codigo: "222222" } });
+    const r = await editarVisita("a1", "111111", idle, fd());
+    expect(editar).toHaveBeenCalledWith("a1", {
+      nombre: "Ana Pérez",
+      tipoDocumento: "DUI",
+      numeroDocumento: "12345678-9",
+      placa: null,
+      fechaVisita: "2026-11-10",
+      horaEstimada: "10:00",
+    });
+    expect(r).toMatchObject({ status: "ok", codigoNuevo: true });
+    expect(revalidatePath).toHaveBeenCalledWith("/visitas");
+  });
+
+  it("mismo código -> codigoNuevo false", async () => {
+    editar.mockResolvedValue({ status: "ok", data: { id: "a1", codigo: "111111" } });
+    const r = await editarVisita("a1", "111111", idle, fd());
+    expect(r.codigoNuevo).toBe(false);
+  });
+
+  it.each([
+    ["conflict", "Esta autorización ya no se puede editar"],
+    ["not_found", "La autorización no existe"],
+    ["forbidden", "No tienes permiso para esta acción"],
+    ["error", "No pudimos guardar los cambios. Intenta de nuevo."],
+  ])("%s -> mensaje", async (status, msg) => {
+    editar.mockResolvedValue({ status });
+    const r = await editarVisita("a1", "111111", idle, fd());
+    expect(r).toEqual({ status: "error", mensajes: [msg] });
   });
 });
