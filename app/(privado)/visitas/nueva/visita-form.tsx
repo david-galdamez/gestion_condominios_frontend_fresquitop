@@ -2,10 +2,14 @@
 
 import Link from "next/link";
 import { useActionState, useState } from "react";
-import { crearVisita, type CrearVisitaState } from "@/app/actions/visitas";
+import {
+  crearVisita,
+  editarVisita,
+  type CrearVisitaState,
+} from "@/app/actions/visitas";
 import { CopiarBoton } from "@/components/copiar-boton";
 import { formatFecha } from "@/lib/format";
-import type { UnidadMia } from "@/lib/types/visitas";
+import type { Autorizacion, UnidadMia } from "@/lib/types/visitas";
 import {
   mascaraDui,
   validarDocumento,
@@ -25,7 +29,13 @@ const btnPrimario =
 
 const inicial: CrearVisitaState = { status: "idle" };
 
-type Props = { unidades: UnidadMia[]; hoy: string; maxFecha: string };
+type Props = {
+  unidades: UnidadMia[];
+  hoy: string;
+  maxFecha: string;
+  // H07b: si viene, el formulario edita esa autorización (la unidad es fija).
+  autorizacion?: Autorizacion;
+};
 
 // Envoltorio: "Autorizar otra visita" cambia la key y reinicia todo el estado
 // (campos y resultado de la acción) sin recargar la página.
@@ -44,20 +54,39 @@ function Formulario({
   unidades,
   hoy,
   maxFecha,
+  autorizacion,
   onOtra,
 }: Props & { onOtra: () => void }) {
-  const [state, formAction, pending] = useActionState(crearVisita, inicial);
+  const editando = Boolean(autorizacion);
+  const [state, formAction, pending] = useActionState(
+    autorizacion
+      ? editarVisita.bind(null, autorizacion.id, autorizacion.codigo)
+      : crearVisita,
+    inicial,
+  );
   // Campos controlados: React 19 reinicia los no controlados tras una acción,
   // y el usuario perdería lo escrito si el servidor devuelve un error.
-  const [campos, setCampos] = useState<CamposVisita>({
-    unidadId: unidades.length === 1 ? unidades[0].id : "",
-    nombre: "",
-    tipoDocumento: "DUI",
-    numeroDocumento: "",
-    placa: "",
-    fechaVisita: "",
-    horaEstimada: "",
-  });
+  const [campos, setCampos] = useState<CamposVisita>(
+    autorizacion
+      ? {
+          unidadId: autorizacion.unidad.id,
+          nombre: autorizacion.nombre,
+          tipoDocumento: autorizacion.tipoDocumento,
+          numeroDocumento: autorizacion.numeroDocumento,
+          placa: autorizacion.placa ?? "",
+          fechaVisita: autorizacion.fechaVisita,
+          horaEstimada: autorizacion.horaEstimada,
+        }
+      : {
+          unidadId: unidades.length === 1 ? unidades[0].id : "",
+          nombre: "",
+          tipoDocumento: "DUI",
+          numeroDocumento: "",
+          placa: "",
+          fechaVisita: "",
+          horaEstimada: "",
+        },
+  );
   const [errCliente, setErrCliente] = useState<ErroresVisita>({});
 
   if (state.status === "ok" && state.autorizacion) {
@@ -68,7 +97,9 @@ function Formulario({
         className="mx-auto flex w-full max-w-md flex-col items-center gap-4 rounded-xl border border-zinc-200 p-6 text-center dark:border-zinc-800"
       >
         <p className="text-sm text-zinc-600 dark:text-zinc-400">
-          Visita autorizada. Comparte este código con tu visitante:
+          {editando
+            ? "Cambios guardados. Código de la visita:"
+            : "Visita autorizada. Comparte este código con tu visitante:"}
         </p>
         <p
           data-testid="codigo"
@@ -78,6 +109,12 @@ function Formulario({
         </p>
         <CopiarBoton texto={a.codigo} />
         <p>Válido solo el {formatFecha(a.fechaVisita)}</p>
+        {state.codigoNuevo && (
+          <p role="status" className="text-sm font-medium">
+            Cambiaste la fecha: se generó un código nuevo y el anterior dejó de
+            funcionar.
+          </p>
+        )}
         <dl className="text-sm text-zinc-600 dark:text-zinc-400">
           <div>Visitante: {a.nombre}</div>
           <div>Unidad {a.unidad.codigo}</div>
@@ -90,9 +127,11 @@ function Formulario({
           >
             Ver mis visitas
           </Link>
-          <button type="button" onClick={onOtra} className={btnPrimario}>
-            Autorizar otra visita
-          </button>
+          {!editando && (
+            <button type="button" onClick={onOtra} className={btnPrimario}>
+              Autorizar otra visita
+            </button>
+          )}
         </div>
       </section>
     );
@@ -168,7 +207,7 @@ function Formulario({
         </div>
       )}
 
-      {unidades.length > 1 ? (
+      {!editando && unidades.length > 1 ? (
         campo(
           "unidadId",
           "Unidad",
@@ -191,7 +230,7 @@ function Formulario({
       ) : (
         <>
           <p className="text-zinc-600 dark:text-zinc-400">
-            Unidad {unidades[0].codigo}
+            Unidad {autorizacion?.unidad.codigo ?? unidades[0].codigo}
           </p>
           <input type="hidden" name="unidadId" value={campos.unidadId} />
         </>
@@ -300,7 +339,7 @@ function Formulario({
 
       <div>
         <button type="submit" disabled={pending} className={btnPrimario}>
-          Autorizar visita
+          {editando ? "Guardar cambios" : "Autorizar visita"}
         </button>
       </div>
     </form>

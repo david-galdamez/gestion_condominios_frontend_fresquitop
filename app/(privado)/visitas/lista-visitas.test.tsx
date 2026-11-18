@@ -76,4 +76,11 @@ describe("ListaVisitas", () => {
       "Esta autorización ya no se puede cancelar",
     );
   });
+
+  it("Editar solo en Vigentes y apunta a /visitas/{id}/editar", () => {
+    render(<ListaVisitas autorizaciones={datos} />);
+    const links = screen.getAllByRole("link", { name: "Editar" });
+    expect(links).toHaveLength(1);
+    expect(links[0]).toHaveAttribute("href", "/visitas/a1/editar");
+  });
 });
