@@ -96,6 +96,14 @@ export default async function EstadoCuentaPage({
         <p className="mt-1 text-xs text-zinc-500">
           Suma de cuotas pendientes y vencidas, sin recargo por mora
         </p>
+        {saldoTotal > 0 && unidad && (
+          <Link
+            href={`/pagos/nuevo?unidadId=${unidad.id}`}
+            className="mt-4 inline-block rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background"
+          >
+            Pagar cuotas
+          </Link>
+        )}
       </section>
 
       <FiltrosForm unidades={unidades} unidadId={unidadId} />
@@ -131,6 +139,14 @@ export default async function EstadoCuentaPage({
                     </td>
                     <td className="py-2">
                       <EstadoCuotaBadge estado={c.estado} />
+                      {c.estado !== "PAGADA" && unidad && (
+                        <Link
+                          href={`/pagos/nuevo?unidadId=${unidad.id}&cuota=${c.id}`}
+                          className="ml-3 text-xs underline"
+                        >
+                          Pagar
+                        </Link>
+                      )}
                     </td>
                   </tr>
                 ))}
