@@ -3,8 +3,10 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const crearVisita = vi.fn();
+const editarVisita = vi.fn();
 vi.mock("@/app/actions/visitas", () => ({
   crearVisita: (...a: unknown[]) => crearVisita(...a),
+  editarVisita: (...a: unknown[]) => editarVisita(...a),
 }));
 
 import { VisitaForm } from "./visita-form";
@@ -130,5 +132,47 @@ describe("VisitaForm", () => {
     await user.click(screen.getByRole("button", { name: "Autorizar visita" }));
     expect(await screen.findByRole("alert")).toHaveTextContent("No tienes unidades asignadas");
     expect(screen.getByLabelText("Nombre del visitante")).toHaveValue("Ana Pérez");
+  });
+
+  describe("modo edición (H07b)", () => {
+    const a = {
+      id: "a1",
+      codigo: "111111",
+      nombre: "Ana Pérez",
+      tipoDocumento: "DUI" as const,
+      numeroDocumento: "12345678-9",
+      placa: "P123",
+      fechaVisita: "2026-11-10",
+      horaEstimada: "10:00",
+      estado: "VIGENTE" as const,
+      unidad: { id: "u2", codigo: "B-202" },
+    };
+
+    it("precarga los datos, unidad fija y botón Guardar cambios", () => {
+      render(<VisitaForm unidades={dos} {...props} autorizacion={a} />);
+      expect(screen.getByLabelText("Nombre del visitante")).toHaveValue("Ana Pérez");
+      expect(screen.getByLabelText("Placa (opcional)")).toHaveValue("P123");
+      expect(screen.getByLabelText("Fecha de visita")).toHaveValue("2026-11-10");
+      expect(screen.getByText("Unidad B-202")).toBeInTheDocument();
+      expect(screen.queryByLabelText("Unidad")).not.toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Guardar cambios" })).toBeInTheDocument();
+    });
+
+    it("al guardar con fecha nueva avisa que el código anterior dejó de funcionar", async () => {
+      editarVisita.mockResolvedValue({
+        status: "ok",
+        codigoNuevo: true,
+        autorizacion: { ...a, codigo: "222222", fechaVisita: "2026-11-12" },
+      });
+      const user = userEvent.setup();
+      render(<VisitaForm unidades={dos} {...props} autorizacion={a} />);
+      set("Fecha de visita", "2026-11-12");
+      await user.click(screen.getByRole("button", { name: "Guardar cambios" }));
+      expect(await screen.findByText(/el anterior dejó de funcionar/)).toBeInTheDocument();
+      expect(screen.getByTestId("codigo")).toHaveTextContent("222 222");
+      expect(editarVisita.mock.calls[0][0]).toBe("a1");
+      expect(editarVisita.mock.calls[0][1]).toBe("111111");
+      expect(crearVisita).not.toHaveBeenCalled();
+    });
   });
 });

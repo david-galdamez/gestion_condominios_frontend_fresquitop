@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useTransition } from "react";
 import { cancelarVisita } from "@/app/actions/visitas";
 import { EstadoAutorizacionBadge } from "@/components/estado-autorizacion-badge";
@@ -74,16 +75,24 @@ export function ListaVisitas({
                 </td>
                 <td className="py-2 text-right">
                   {a.estado === "VIGENTE" && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setError("");
-                        setACancelar(a);
-                      }}
-                      className="rounded-md border border-zinc-300 px-3 py-1 text-xs dark:border-zinc-700"
-                    >
-                      Cancelar
-                    </button>
+                    <div className="flex justify-end gap-2">
+                      <Link
+                        href={`/visitas/${a.id}/editar`}
+                        className="rounded-md border border-zinc-300 px-3 py-1 text-xs dark:border-zinc-700"
+                      >
+                        Editar
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setError("");
+                          setACancelar(a);
+                        }}
+                        className="rounded-md border border-zinc-300 px-3 py-1 text-xs dark:border-zinc-700"
+                      >
+                        Cancelar
+                      </button>
+                    </div>
                   )}
                 </td>
               </tr>
