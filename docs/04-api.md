@@ -30,6 +30,10 @@ El resumen de endpoints por módulo y sus roles está en la
 | GET, POST | /api/v1/areas | `lib/areas.ts` | Administrador |
 | PUT | /api/v1/areas/{id} | `lib/areas.ts` | Administrador |
 | PATCH | /api/v1/areas/{id}/estado | `lib/areas.ts` | Administrador |
+| GET | /api/v1/areas (solo las activas) | `lib/reservas.ts` | Residente |
+| POST | /api/v1/reservas | `lib/reservas.ts` | Residente |
+| GET | /api/v1/reservas/mias | `lib/reservas.ts` | Residente |
+| PATCH | /api/v1/reservas/{id}/cancelar | `lib/reservas.ts` | Residente |
 
 ### Módulo 3: Incidencias y mantenimiento
 

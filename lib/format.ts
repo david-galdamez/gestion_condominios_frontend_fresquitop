@@ -62,3 +62,14 @@ export function sumarDias(iso: string, n: number) {
 export function fechaEnRango(iso: string, hoy: string, maxDias: number) {
   return esFechaValida(iso) && iso >= hoy && iso <= sumarDias(hoy, maxDias);
 }
+
+// Hora actual (0 a 23) en la zona del negocio. Sirve para rechazar reservas
+// de una hora que ya pasó el mismo día.
+export function horaActualEnElSalvador(ahora: Date = new Date()) {
+  const h = new Intl.DateTimeFormat("en-GB", {
+    timeZone: ZONA_NEGOCIO,
+    hour: "2-digit",
+    hourCycle: "h23",
+  }).format(ahora);
+  return Number(h);
+}
