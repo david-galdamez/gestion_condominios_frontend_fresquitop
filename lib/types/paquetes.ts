@@ -14,3 +14,19 @@ export type Paquete = {
   estado: EstadoPaquete;
   recibidoEn: string;
 };
+
+// Respuesta de POST /paquetes/{id}/entrega (H10).
+export type EntregaPaquete = {
+  id: string;
+  codigoPaquete: string;
+  estado: "ENTREGADO";
+  entregadoEn: string;
+  entregadoA: string;
+};
+
+// Cuerpo de POST /paquetes/{id}/entrega.
+export type DatosEntrega = {
+  codigoRetiro: string;
+  recibidoPor: string;
+};
+

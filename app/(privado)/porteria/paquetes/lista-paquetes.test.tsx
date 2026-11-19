@@ -1,7 +1,11 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+// El botón de entrega importa la Server Action; aquí no se ejecuta.
+vi.mock("@/app/actions/paquetes", () => ({ entregarPaqueteAction: vi.fn() }));
+
 import type { Paquete } from "@/lib/types/paquetes";
-import { formatLlegada, ListaPaquetes } from "./lista-paquetes";
+import { diasEnPorteria, formatLlegada, ListaPaquetes } from "./lista-paquetes";
 
 const base: Paquete = {
   id: "p1",
@@ -40,5 +44,35 @@ describe("ListaPaquetes", () => {
   it("no hay columna ni dato de código de retiro", () => {
     render(<ListaPaquetes paquetes={[base]} />);
     expect(screen.queryByText(/retiro/i)).not.toBeInTheDocument();
+  });
+
+  it("cada paquete pendiente tiene su botón Entregar; los entregados no", () => {
+    render(
+      <ListaPaquetes
+        paquetes={[
+          base,
+          { ...base, id: "p2", codigoPaquete: "PAQ-000118", estado: "RETENIDO" },
+          { ...base, id: "p3", codigoPaquete: "PAQ-000090", estado: "ENTREGADO" },
+        ]}
+      />,
+    );
+    expect(screen.getByRole("button", { name: "Entregar PAQ-000124" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Entregar PAQ-000118" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Entregar PAQ-000090" })).not.toBeInTheDocument();
+  });
+});
+
+describe("diasEnPorteria", () => {
+  const llegada = "2026-11-05T00:40:00.000Z"; // 04/11 18:40 en El Salvador
+
+  it("cuenta días de calendario en hora de El Salvador", () => {
+    expect(diasEnPorteria(llegada, new Date("2026-11-05T05:00:00Z"))).toBe(0); // 04/11 23:00
+    expect(diasEnPorteria(llegada, new Date("2026-11-05T06:30:00Z"))).toBe(1); // 05/11 00:30
+    expect(diasEnPorteria(llegada, new Date("2026-11-12T18:00:00Z"))).toBe(8);
+  });
+
+  it("nunca es negativo y tolera fechas inválidas", () => {
+    expect(diasEnPorteria(llegada, new Date("2026-11-01T00:00:00Z"))).toBe(0);
+    expect(diasEnPorteria("no-es-fecha")).toBe(0);
   });
 });

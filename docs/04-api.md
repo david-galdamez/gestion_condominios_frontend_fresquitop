@@ -55,6 +55,7 @@ El resumen de endpoints por módulo y sus roles está en la
 |---|---|---|---|
 | GET | /api/v1/unidades | `lib/paquetes.ts` | Seguridad |
 | GET, POST | /api/v1/paquetes | `lib/paquetes.ts` | Seguridad |
+| POST | /api/v1/paquetes/{id}/entrega | `lib/paquetes.ts` | Seguridad |
 
 ### Módulo 7: Anuncios y comunicados
 

@@ -94,3 +94,48 @@ export function erroresDesdeApi(messages: string[]) {
   }
   return { errores, resto };
 }
+
+// ---- H10: entrega del paquete ----
+
+export const MSG_ENTREGA = {
+  codigo: "El código de retiro debe tener 6 dígitos",
+  recibidoPor: "Quien recibe debe tener entre 3 y 60 caracteres",
+  codigoIncorrecto: "Código de retiro incorrecto",
+  yaEntregado: "Este paquete ya fue entregado",
+} as const;
+
+export type CamposEntrega = { codigoRetiro: string; recibidoPor: string };
+export type ErroresEntrega = Partial<Record<keyof CamposEntrega, string>>;
+
+export const validarCodigoRetiro = (v: string) =>
+  /^\d{6}$/.test(v.trim()) ? undefined : MSG_ENTREGA.codigo;
+
+export const validarRecibidoPor = (v: string) =>
+  v.trim().length >= 3 && v.trim().length <= 60
+    ? undefined
+    : MSG_ENTREGA.recibidoPor;
+
+// Devuelve solo los campos con error; un objeto vacío significa válido.
+export function validarEntrega(c: CamposEntrega): ErroresEntrega {
+  const todos: ErroresEntrega = {
+    codigoRetiro: validarCodigoRetiro(c.codigoRetiro),
+    recibidoPor: validarRecibidoPor(c.recibidoPor),
+  };
+  return Object.fromEntries(
+    Object.entries(todos).filter(([, v]) => v !== undefined),
+  ) as ErroresEntrega;
+}
+
+// Ubica bajo su campo los mensajes 400 del backend que reconoce; el resto se
+// muestra arriba del diálogo.
+export function erroresEntregaDesdeApi(messages: string[]) {
+  const errores: ErroresEntrega = {};
+  const resto: string[] = [];
+  for (const m of messages) {
+    if (m === MSG_ENTREGA.codigoIncorrecto || m === MSG_ENTREGA.codigo)
+      errores.codigoRetiro = m;
+    else if (m === MSG_ENTREGA.recibidoPor) errores.recibidoPor = m;
+    else resto.push(m);
+  }
+  return { errores, resto };
+}

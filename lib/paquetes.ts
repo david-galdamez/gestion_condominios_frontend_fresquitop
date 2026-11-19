@@ -1,6 +1,11 @@
 import "server-only";
 import { apiFetch } from "@/lib/api";
-import type { Paquete, UnidadResumen } from "@/lib/types/paquetes";
+import type {
+  DatosEntrega,
+  EntregaPaquete,
+  Paquete,
+  UnidadResumen,
+} from "@/lib/types/paquetes";
 
 export type PaquetesResultado<T> =
   | { status: "ok"; data: T }
@@ -68,4 +73,22 @@ export const getPaquetesPorteria = () =>
 export const registrarPaquete = (datos: FormData) =>
   llamar<Paquete>("paquetes", { method: "POST", body: datos }, (b) =>
     esPaquete(b) ? b : null,
+  );
+
+const esEntrega = (x: unknown): x is EntregaPaquete =>
+  !!x &&
+  typeof (x as EntregaPaquete).id === "string" &&
+  (x as EntregaPaquete).estado === "ENTREGADO";
+
+// BE-10.1: POST /api/v1/paquetes/{id}/entrega (Seguridad).
+// 400 código incorrecto o datos inválidos, 404 no existe, 409 ya entregado.
+export const entregarPaquete = (id: string, datos: DatosEntrega) =>
+  llamar<EntregaPaquete>(
+    `paquetes/${encodeURIComponent(id)}/entrega`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(datos),
+    },
+    (b) => (esEntrega(b) ? b : null),
   );
