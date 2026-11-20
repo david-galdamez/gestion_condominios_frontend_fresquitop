@@ -1,4 +1,8 @@
-import type { CategoriaReporte, EstadoReporte } from "@/lib/types/reportes";
+import type {
+  CategoriaReporte,
+  EstadoReporte,
+  PrioridadReporte,
+} from "@/lib/types/reportes";
 
 export const CATEGORIA_LABEL: Record<CategoriaReporte, string> = {
   FUGA: "Fuga",
@@ -12,6 +16,12 @@ export const ESTADO_REPORTE_LABEL: Record<EstadoReporte, string> = {
   ABIERTO: "Abierto",
   EN_PROCESO: "En proceso",
   RESUELTO: "Resuelto",
+};
+
+export const PRIORIDAD_REPORTE_LABEL: Record<PrioridadReporte, string> = {
+  ALTA: "Alta",
+  MEDIA: "Media",
+  BAJA: "Baja",
 };
 
 // Los reportes traen un instante (ISO con hora), no una fecha de calendario:
