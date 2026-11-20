@@ -9,6 +9,7 @@ import {
 import { CopiarBoton } from "@/components/copiar-boton";
 import { formatFecha } from "@/lib/format";
 import type { Area } from "@/lib/types/areas";
+import type { Prellenado } from "@/lib/validaciones/disponibilidad";
 import {
   horasDelArea,
   validarReserva,
@@ -24,7 +25,8 @@ const btnPrimario =
 
 const inicial: CrearReservaState = { status: "idle" };
 
-type Props = { areas: Area[]; ahora: Ahora };
+// `prellenado`: bloque elegido en la disponibilidad (H23, FE-23.2).
+type Props = { areas: Area[]; ahora: Ahora; prellenado?: Prellenado };
 
 // Envoltorio: "Hacer otra reserva" cambia la key y reinicia todo el estado
 // (campos y resultado de la acción) sin recargar la página.
@@ -34,6 +36,8 @@ export function ReservaForm(props: Props) {
     <Formulario
       key={intento}
       {...props}
+      // "Hacer otra reserva" empieza en blanco, sin el bloque de la disponibilidad.
+      prellenado={intento === 0 ? props.prellenado : undefined}
       onOtra={() => setIntento((n) => n + 1)}
     />
   );
@@ -42,6 +46,7 @@ export function ReservaForm(props: Props) {
 function Formulario({
   areas,
   ahora,
+  prellenado,
   onOtra,
 }: Props & { onOtra: () => void }) {
   const [state, formAction, pending] = useActionState(
@@ -51,9 +56,9 @@ function Formulario({
   // Campos controlados: React 19 reinicia los no controlados tras una acción,
   // y el usuario perdería lo escrito si el servidor devuelve un error.
   const [campos, setCampos] = useState<CamposReserva>({
-    areaId: areas.length === 1 ? areas[0].id : "",
-    fecha: "",
-    horaInicio: "",
+    areaId: prellenado?.areaId ?? (areas.length === 1 ? areas[0].id : ""),
+    fecha: prellenado?.fecha ?? "",
+    horaInicio: prellenado?.horaInicio ?? "",
     horaFin: "",
     asistentes: "",
   });
