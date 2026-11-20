@@ -29,3 +29,24 @@ export type NuevoComunicado = {
   fechaPublicacion?: string;
   fechaExpiracion?: string;
 };
+
+// H14 · Vista del residente.
+export type MiComunicadoResumen = {
+  id: string;
+  titulo: string;
+  categoria: CategoriaComunicado;
+  fechaPublicacion: string;
+  leido: boolean;
+};
+
+export type MisComunicadosPagina = {
+  datos: MiComunicadoResumen[];
+  total: number;
+  pagina: number;
+};
+
+export type MiComunicadoDetalle = MiComunicadoResumen & {
+  contenido: string;
+  fechaExpiracion: string | null;
+  archivado: boolean;
+};

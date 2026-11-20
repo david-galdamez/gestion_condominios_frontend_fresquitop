@@ -2,6 +2,8 @@ import "server-only";
 import { apiFetch } from "@/lib/api";
 import type {
   Comunicado,
+  MiComunicadoDetalle,
+  MisComunicadosPagina,
   NuevoComunicado,
   Torre,
 } from "@/lib/types/comunicados";
@@ -72,4 +74,43 @@ export const crearComunicado = (datos: NuevoComunicado) =>
       body: JSON.stringify(datos),
     },
     (b) => (esComunicado(b) ? b : null),
+  );
+
+// H14 · Vista del residente.
+
+export const MIS_COMUNICADOS_POR_PAGINA = 20;
+
+export const getMisComunicados = ({
+  archivo,
+  pagina,
+}: {
+  archivo: boolean;
+  pagina: number;
+}) =>
+  llamar<MisComunicadosPagina>(
+    `comunicados/mios?archivo=${archivo}&pagina=${pagina}`,
+    undefined,
+    (b) => {
+      const p = b as Partial<MisComunicadosPagina> | null;
+      return p && Array.isArray(p.datos) && typeof p.total === "number"
+        ? { datos: p.datos, total: p.total, pagina: p.pagina ?? pagina }
+        : null;
+    },
+  );
+
+export const getConteoNoLeidos = () =>
+  llamar<number>("comunicados/no-leidos/conteo", undefined, (b) => {
+    const n = (b as { noLeidos?: unknown } | null)?.noLeidos;
+    return typeof n === "number" ? n : null;
+  });
+
+/** Abrir el comunicado lo marca como leído en el backend. */
+export const getMiComunicado = (id: string) =>
+  llamar<MiComunicadoDetalle>(
+    `comunicados/mios/${encodeURIComponent(id)}`,
+    undefined,
+    (b) =>
+      b && typeof (b as MiComunicadoDetalle).contenido === "string"
+        ? (b as MiComunicadoDetalle)
+        : null,
   );

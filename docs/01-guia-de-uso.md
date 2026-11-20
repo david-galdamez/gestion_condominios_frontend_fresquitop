@@ -12,7 +12,7 @@ La descripción completa de cada flujo y sus reglas de negocio está en la
 
 | Rol | Pantallas |
 |---|---|
-| Residente | Inicio, Estado de cuenta (`/estado-cuenta`), Visitas (`/visitas`, `/visitas/nueva`, `/visitas/{id}/editar`), Mis reportes (`/reportes`, `/reportes/nuevo`, `/reportes/{numero}`). |
+| Residente | Inicio, Estado de cuenta (`/estado-cuenta`), Visitas (`/visitas`, `/visitas/nueva`, `/visitas/{id}/editar`), Mis reportes (`/reportes`, `/reportes/nuevo`, `/reportes/{numero}`), Comunicados (`/comunicados`, `/comunicados/{id}`). |
 | Administrador | Inicio, Áreas comunes (`/admin/areas`, nueva y editar), Morosidad (`/admin/morosidad`), Comunicados (`/admin/comunicados`, `/admin/comunicados/nuevo`). |
 | Seguridad | Inicio, Paquetes (`/porteria/paquetes`, `/porteria/paquetes/nuevo`). |
 
@@ -77,3 +77,11 @@ opcional y foto. La lista muestra los paquetes en portería y retenidos.
 2. Título, contenido (con contador de caracteres), categoría y destinatarios (todo el condominio o casillas por torre).
 3. La fecha de publicación viene en “ahora”: el botón dice **Publicar**. Con una fecha futura cambia a **Programar**. La expiración es opcional.
 4. Confirmar “Se avisará a N torres. ¿Continuar?”. Se vuelve a la lista con el aviso “Comunicado publicado/programado”.
+
+#### Ver mis comunicados (Residente, H14)
+
+1. Menú **Comunicados**. Arriba a la derecha está el contador “N sin leer”; se actualiza al abrir la pantalla y cada 30 segundos.
+2. La pestaña **Principal** lista los comunicados vigentes para todo el condominio y para la torre del residente, del más reciente al más antiguo, 20 por página. Los no leídos llevan un punto azul y la etiqueta “No leído”.
+3. Al abrir un comunicado se ve su contenido y queda leído; el contador baja en 1.
+4. La pestaña **Archivo** lista los comunicados expirados.
+5. Si una pestaña está vacía se ve “No hay comunicados”. Un comunicado de otra torre abierto por enlace muestra “Comunicado no encontrado”.
