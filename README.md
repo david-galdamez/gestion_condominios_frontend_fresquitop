@@ -56,3 +56,260 @@ El backend debe estar corriendo; ver [Instalación local](docs/05-instalacion-lo
 7. [Forma de trabajo](docs/07-forma-de-trabajo.md): Git Flow, commits y PR.
 8. [Historias](docs/08-historias.md): estado de cada historia por módulo.
 9. [Problemas conocidos](docs/09-problemas-conocidos.md).
+
+```
+gestion_condominios_frontend_fresquitop
+├─ .node-version
+├─ AGENTS.md
+├─ app
+│  ├─ (privado)
+│  │  ├─ admin
+│  │  │  ├─ areas
+│  │  │  │  ├─ area-form.test.tsx
+│  │  │  │  ├─ area-form.tsx
+│  │  │  │  ├─ error.tsx
+│  │  │  │  ├─ lista-areas.test.tsx
+│  │  │  │  ├─ lista-areas.tsx
+│  │  │  │  ├─ loading.tsx
+│  │  │  │  ├─ nueva
+│  │  │  │  │  └─ page.tsx
+│  │  │  │  ├─ page.tsx
+│  │  │  │  └─ [id]
+│  │  │  │     └─ editar
+│  │  │  │        └─ page.tsx
+│  │  │  ├─ comunicados
+│  │  │  │  ├─ lista-comunicados.tsx
+│  │  │  │  ├─ nuevo
+│  │  │  │  │  ├─ comunicado-form.test.tsx
+│  │  │  │  │  ├─ comunicado-form.tsx
+│  │  │  │  │  └─ page.tsx
+│  │  │  │  └─ page.tsx
+│  │  │  ├─ cuotas
+│  │  │  │  ├─ configuracion-form.tsx
+│  │  │  │  ├─ cuotas-forms.test.tsx
+│  │  │  │  ├─ error.tsx
+│  │  │  │  ├─ generar-form.tsx
+│  │  │  │  ├─ loading.tsx
+│  │  │  │  └─ page.tsx
+│  │  │  └─ morosidad
+│  │  │     ├─ error.tsx
+│  │  │     ├─ filtros-form.test.tsx
+│  │  │     ├─ filtros-form.tsx
+│  │  │     ├─ leer-filtros.test.tsx
+│  │  │     ├─ leer-filtros.tsx
+│  │  │     ├─ loading.tsx
+│  │  │     ├─ page.test.tsx
+│  │  │     ├─ page.tsx
+│  │  │     └─ reintentar-button.tsx
+│  │  ├─ directorio
+│  │  │  └─ mi-perfil
+│  │  │     ├─ error.tsx
+│  │  │     ├─ loading.tsx
+│  │  │     ├─ page.tsx
+│  │  │     ├─ perfil-form.test.tsx
+│  │  │     ├─ perfil-form.tsx
+│  │  │     └─ vista-previa.tsx
+│  │  ├─ estado-cuenta
+│  │  │  ├─ error.tsx
+│  │  │  ├─ filtros-form.test.tsx
+│  │  │  ├─ filtros-form.tsx
+│  │  │  ├─ leer-filtros.test.ts
+│  │  │  ├─ leer-filtros.ts
+│  │  │  ├─ loading.tsx
+│  │  │  ├─ page.tsx
+│  │  │  └─ reintentar-button.tsx
+│  │  ├─ layout.tsx
+│  │  ├─ page.tsx
+│  │  ├─ pagos
+│  │  │  ├─ nuevo
+│  │  │  │  ├─ error.tsx
+│  │  │  │  ├─ loading.tsx
+│  │  │  │  ├─ page.tsx
+│  │  │  │  ├─ pago-form.test.tsx
+│  │  │  │  └─ pago-form.tsx
+│  │  │  └─ [numeroTransaccion]
+│  │  │     └─ page.tsx
+│  │  ├─ porteria
+│  │  │  ├─ accesos
+│  │  │  │  ├─ accesos.test.tsx
+│  │  │  │  ├─ error.tsx
+│  │  │  │  ├─ loading.tsx
+│  │  │  │  ├─ nuevo
+│  │  │  │  │  ├─ page.tsx
+│  │  │  │  │  └─ visitante-form.tsx
+│  │  │  │  ├─ page.tsx
+│  │  │  │  └─ resultados.tsx
+│  │  │  └─ paquetes
+│  │  │     ├─ actualizar-button.tsx
+│  │  │     ├─ error.tsx
+│  │  │     ├─ lista-paquetes.test.tsx
+│  │  │     ├─ lista-paquetes.tsx
+│  │  │     ├─ loading.tsx
+│  │  │     ├─ nuevo
+│  │  │     │  ├─ page.tsx
+│  │  │     │  ├─ paquete-form.test.tsx
+│  │  │     │  └─ paquete-form.tsx
+│  │  │     └─ page.tsx
+│  │  ├─ reportes
+│  │  │  ├─ loading.tsx
+│  │  │  ├─ nuevo
+│  │  │  │  ├─ page.tsx
+│  │  │  │  └─ reporte-form.tsx
+│  │  │  ├─ page.tsx
+│  │  │  └─ [numero]
+│  │  │     ├─ not-found.tsx
+│  │  │     └─ page.tsx
+│  │  ├─ sin-permiso
+│  │  │  └─ page.tsx
+│  │  └─ visitas
+│  │     ├─ error.tsx
+│  │     ├─ lista-visitas.test.tsx
+│  │     ├─ lista-visitas.tsx
+│  │     ├─ loading.tsx
+│  │     ├─ nueva
+│  │     │  ├─ error.tsx
+│  │     │  ├─ loading.tsx
+│  │     │  ├─ page.tsx
+│  │     │  ├─ visita-form.test.tsx
+│  │     │  └─ visita-form.tsx
+│  │     ├─ page.tsx
+│  │     └─ [id]
+│  │        └─ editar
+│  │           └─ page.tsx
+│  ├─ actions
+│  │  ├─ accesos.test.ts
+│  │  ├─ accesos.ts
+│  │  ├─ areas.test.ts
+│  │  ├─ areas.ts
+│  │  ├─ auth.ts
+│  │  ├─ comunicados.test.ts
+│  │  ├─ comunicados.ts
+│  │  ├─ cuotas.test.ts
+│  │  ├─ cuotas.ts
+│  │  ├─ pagos.test.ts
+│  │  ├─ pagos.ts
+│  │  ├─ paquetes.test.ts
+│  │  ├─ paquetes.ts
+│  │  ├─ perfil-directorio.test.ts
+│  │  ├─ perfil-directorio.ts
+│  │  ├─ visitas.test.ts
+│  │  └─ visitas.ts
+│  ├─ api
+│  │  ├─ reportes
+│  │  │  ├─ route.ts
+│  │  │  └─ [numero]
+│  │  │     └─ fotos
+│  │  │        └─ [fotoId]
+│  │  │           └─ route.ts
+│  │  └─ sesion
+│  │     └─ expirada
+│  │        └─ route.ts
+│  ├─ directorio
+│  │  └─ page.tsx
+│  ├─ favicon.ico
+│  ├─ globals.css
+│  ├─ layout.tsx
+│  ├─ login
+│  │  ├─ login-form.tsx
+│  │  └─ page.tsx
+│  └─ porteria
+│     └─ dentro
+│        └─ page.tsx
+├─ CLAUDE.md
+├─ components
+│  ├─ copiar-boton.test.tsx
+│  ├─ copiar-boton.tsx
+│  ├─ estado-autorizacion-badge.test.tsx
+│  ├─ estado-autorizacion-badge.tsx
+│  ├─ estado-cuota-badge.test.tsx
+│  ├─ estado-cuota-badge.tsx
+│  ├─ estado-reporte-badge.tsx
+│  └─ session-provider.tsx
+├─ docs
+│  ├─ 01-guia-de-uso.md
+│  ├─ 02-arquitectura.md
+│  ├─ 03-modelo-de-datos.md
+│  ├─ 04-api.md
+│  ├─ 05-instalacion-local.md
+│  ├─ 06-despliegue.md
+│  ├─ 07-forma-de-trabajo.md
+│  ├─ 08-historias.md
+│  └─ 09-problemas-conocidos.md
+├─ eslint.config.mjs
+├─ lib
+│  ├─ accesos.ts
+│  ├─ api.ts
+│  ├─ areas.test.ts
+│  ├─ areas.ts
+│  ├─ auth.ts
+│  ├─ comunicados.ts
+│  ├─ cuotas.ts
+│  ├─ estado-cuenta.test.ts
+│  ├─ estado-cuenta.ts
+│  ├─ format.test.ts
+│  ├─ format.ts
+│  ├─ morosidad.test.ts
+│  ├─ morosidad.ts
+│  ├─ pagos.test.ts
+│  ├─ pagos.ts
+│  ├─ paquetes.test.ts
+│  ├─ paquetes.ts
+│  ├─ perfil-directorio.test.ts
+│  ├─ perfil-directorio.ts
+│  ├─ reportes-ui.ts
+│  ├─ reportes-validacion.test.ts
+│  ├─ reportes-validacion.ts
+│  ├─ reportes.ts
+│  ├─ session.ts
+│  ├─ stores
+│  │  └─ session-store.ts
+│  ├─ types
+│  │  ├─ accesos.ts
+│  │  ├─ areas.ts
+│  │  ├─ comunicados.ts
+│  │  ├─ cuotas.ts
+│  │  ├─ estado-cuenta.ts
+│  │  ├─ morosidad.ts
+│  │  ├─ pagos.ts
+│  │  ├─ paquetes.ts
+│  │  ├─ perfil-directorio.ts
+│  │  ├─ reportes.ts
+│  │  └─ visitas.ts
+│  ├─ validaciones
+│  │  ├─ acceso.test.ts
+│  │  ├─ acceso.ts
+│  │  ├─ area.test.ts
+│  │  ├─ area.ts
+│  │  ├─ comunicado.test.ts
+│  │  ├─ comunicado.ts
+│  │  ├─ cuota.test.ts
+│  │  ├─ cuota.ts
+│  │  ├─ pago.test.ts
+│  │  ├─ pago.ts
+│  │  ├─ paquete.test.ts
+│  │  ├─ paquete.ts
+│  │  ├─ perfil-directorio.test.ts
+│  │  ├─ perfil-directorio.ts
+│  │  ├─ visita.test.ts
+│  │  └─ visita.ts
+│  ├─ visitas.test.ts
+│  └─ visitas.ts
+├─ next.config.ts
+├─ package-lock.json
+├─ package.json
+├─ postcss.config.mjs
+├─ proxy.ts
+├─ public
+│  ├─ file.svg
+│  ├─ globe.svg
+│  ├─ next.svg
+│  ├─ vercel.svg
+│  └─ window.svg
+├─ README.md
+├─ test
+│  └─ server-only.ts
+├─ tsconfig.json
+├─ vitest.config.mts
+└─ vitest.setup.ts
+
+```
