@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { crearComunicado } from "@/lib/comunicados";
+import { crearComunicado, getConteoNoLeidos } from "@/lib/comunicados";
 import type { CategoriaComunicado } from "@/lib/types/comunicados";
 import {
   aIsoSv,
@@ -83,4 +83,10 @@ export async function publicarComunicado(
         mensajes: ["No pudimos guardar el comunicado. Intenta de nuevo."],
       };
   }
+}
+
+/** H14: el contador de no leídos lo consulta al abrir la pantalla y cada 30 s. Null si falla. */
+export async function contarNoLeidos(): Promise<number | null> {
+  const r = await getConteoNoLeidos();
+  return r.status === "ok" ? r.data : null;
 }

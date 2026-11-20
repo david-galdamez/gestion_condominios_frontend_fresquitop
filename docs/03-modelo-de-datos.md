@@ -16,7 +16,7 @@ Los tipos de `lib/types/` reflejan las respuestas de la API:
 | `paquetes.ts` | Paquete en portería, mensajería | `paquete` |
 | `reportes.ts` | Reporte, evidencia, historial | `reporte`, `evidencia_reporte`, `historial_reporte` |
 | `morosidad.ts` | Unidad morosa y resumen | `cuota`, `unidad` |
-| `comunicados.ts` | `Comunicado`, `NuevoComunicado`, `Torre` | `comunicado`, `comunicado_destino`, `torre` |
+| `comunicados.ts` | `Comunicado`, `NuevoComunicado`, `Torre`, `MiComunicadoResumen`, `MisComunicadosPagina`, `MiComunicadoDetalle` | `comunicado`, `comunicado_destino`, `torre`, `lectura_comunicado` |
 
 En la sesión se guarda el usuario (`id`, `email`, `nombre`, `rol`) en una
 cookie httpOnly junto con el access token.

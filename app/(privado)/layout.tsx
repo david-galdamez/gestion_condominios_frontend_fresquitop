@@ -18,6 +18,7 @@ const MENU: { href: string; label: string; roles?: Rol[] }[] = [
   { href: "/reportes", label: "Mis reportes", roles: ["RESIDENTE"] },
   { href: "/directorio/mi-perfil", label: "Mi directorio", roles: ["RESIDENTE"] },
   { href: "/asambleas", label: "Asambleas", roles: ["RESIDENTE"] },
+  { href: "/comunicados", label: "Comunicados", roles: ["RESIDENTE"] },
   { href: "/porteria/accesos", label: "Accesos", roles: ["SEGURIDAD"] },
   { href: "/porteria/paquetes", label: "Paquetes", roles: ["SEGURIDAD"] },
   { href: "/admin/panel", label: "Panel", roles: ["ADMINISTRADOR"] },
