@@ -1,0 +1,31 @@
+'use client';
+
+import { useEffect } from 'react';
+
+export default function Error({
+  error,
+  retry,
+}: {
+  error: Error & { digest?: string };
+  retry: () => void;
+}) {
+  useEffect(() => {
+    console.error(error);
+  }, [error]);
+
+  return (
+    <div className="flex flex-col items-start gap-3">
+      <h1 className="text-2xl font-semibold">Asambleas y votaciones</h1>
+      <p role="alert" className="text-red-600 dark:text-red-400">
+        No pudimos cargar las asambleas. Intenta de nuevo.
+      </p>
+      <button
+        type="button"
+        onClick={() => retry()}
+        className="rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background"
+      >
+        Reintentar
+      </button>
+    </div>
+  );
+}

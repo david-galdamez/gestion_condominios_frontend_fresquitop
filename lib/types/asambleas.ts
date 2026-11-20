@@ -25,3 +25,43 @@ export type OpcionResultado = { opcionId: string; texto: string; votos: number; 
 export type TemaResultado = { temaId: string; titulo: string; opciones: OpcionResultado[]; ganadora: string | null; empate: boolean; mensajeEmpate?: string };
 export type ResultadoAsamblea = { asambleaId: string; estado: string; participacion: number; temas: TemaResultado[] };
 export type ComprobanteVerificacion = { valido: boolean; tema: string; asamblea: string; fecha: string };
+
+export type TemaDetalleResidente = {
+  id: string;
+  titulo: string;
+  orden: number;
+  yaVoto: boolean;
+  codigoVerificacion: string | null;
+  fechaVoto: string | null;
+  opciones: OpcionTema[];
+};
+
+export type DetalleAsambleaResidente = {
+  id: string;
+  titulo: string;
+  descripcion: string;
+  fechaApertura: string;
+  fechaCierre: string;
+  estado: EstadoAsamblea;
+  temasVotados: string[];
+  temas: TemaDetalleResidente[];
+};
+
+export type VotoItemSolicitud = {
+  temaId: string;
+  opcionId: string;
+};
+
+export type EmitirVotosSolicitud = {
+  votos: VotoItemSolicitud[];
+};
+
+export type ComprobanteVoto = {
+  temaId: string;
+  codigoVerificacion: string;
+  fecha: string;
+};
+
+export type EmitirVotosRespuesta = {
+  comprobantes: ComprobanteVoto[];
+};
