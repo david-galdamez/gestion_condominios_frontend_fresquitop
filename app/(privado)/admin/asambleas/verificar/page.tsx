@@ -1,19 +1,23 @@
 'use client';
 import { useState } from 'react';
+import type { ComprobanteVerificacion } from '@/lib/types/asambleas';
 
 export default function VerificarComprobantePage() {
   const [codigo, setCodigo] = useState('');
-  const [resultado, setResultado] = useState<any>(null);
+  const [resultado, setResultado] = useState<ComprobanteVerificacion | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const verificar = async () => {
-    setError(null); setResultado(null);
+    setError(null);
+    setResultado(null);
     try {
-      const res = await fetch(`/api/verificar-comprobante?codigo=${codigo}`);
+      const res = await fetch(`/api/verificar-comprobante?codigo=${encodeURIComponent(codigo)}`);
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Error al verificar');
-      setResultado(data);
-    } catch (err: any) { setError(err.message); }
+      setResultado(data as ComprobanteVerificacion);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Error al verificar');
+    }
   };
 
   return (
