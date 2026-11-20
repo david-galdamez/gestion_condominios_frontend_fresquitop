@@ -18,6 +18,7 @@ const MENU: { href: string; label: string; roles?: Rol[] }[] = [
   { href: "/directorio/mi-perfil", label: "Mi directorio", roles: ["RESIDENTE"] },
   { href: "/porteria/accesos", label: "Accesos", roles: ["SEGURIDAD"] },
   { href: "/porteria/paquetes", label: "Paquetes", roles: ["SEGURIDAD"] },
+  { href: "/admin/reportes", label: "Reportes", roles: ["ADMINISTRADOR"] },
   { href: "/admin/cuotas", label: "Cuotas", roles: ["ADMINISTRADOR"] },
   { href: "/admin/areas", label: "Áreas comunes", roles: ["ADMINISTRADOR"] },
   { href: "/admin/morosidad", label: "Morosidad", roles: ["ADMINISTRADOR"] },
@@ -38,7 +39,7 @@ export default async function PrivadoLayout({
       <header className="border-b border-zinc-200 dark:border-zinc-800">
         <div className="mx-auto flex w-full max-w-5xl items-center gap-6 px-4 py-3">
           <span className="font-semibold">Condominios</span>
-          <nav className="flex flex-1 gap-4 text-sm">
+          <nav className="flex flex-1 flex-wrap gap-4 text-sm">
             {links.map((l) => (
               <Link
                 key={l.href}
