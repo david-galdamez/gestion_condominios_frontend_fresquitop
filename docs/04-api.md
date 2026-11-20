@@ -66,3 +66,6 @@ El resumen de endpoints por módulo y sus roles está en la
 |---|---|---|---|
 | GET | /api/v1/torres | `lib/comunicados.ts` | Administrador |
 | GET, POST | /api/v1/comunicados | `lib/comunicados.ts` | Administrador |
+| GET | /api/v1/comunicados/mios | `lib/comunicados.ts` | Residente |
+| GET | /api/v1/comunicados/no-leidos/conteo | `lib/comunicados.ts` (y la Server Action `contarNoLeidos`) | Residente |
+| GET | /api/v1/comunicados/mios/{id} | `lib/comunicados.ts` | Residente |
