@@ -1,6 +1,6 @@
 import 'server-only';
 import { apiFetch } from '@/lib/api';
-import type { Asamblea, NuevaAsamblea } from '@/lib/types/asambleas';
+import type { Asamblea, NuevaAsamblea, ResultadoAsamblea, ComprobanteVerificacion } from '@/lib/types/asambleas';
 
 export type AsambleasResultado<T> = { status: 'ok'; data: T } | { status: 'bad_request'; messages: string[] } | { status: 'forbidden' } | { status: 'not_found' } | { status: 'error' };
 
@@ -29,3 +29,12 @@ const esAsamblea = (x: unknown): x is Asamblea => !!x && typeof (x as Asamblea).
 export const crearAsamblea = (datos: NuevaAsamblea) => llamar<Asamblea>('asambleas', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datos) }, (b) => (esAsamblea(b) ? b : null));
 
 export const publicarAsamblea = (id: string) => llamar<{ id: string; estado: string; publicadaEn: string; unidadesConvocadas: number }>(`asambleas/${id}/publicar`, { method: 'POST' }, (b) => (b && typeof (b as any).id === 'string' ? (b as any) : null));
+
+export const obtenerResultados = (id: string) => 
+  llamar<ResultadoAsamblea>(`asambleas/${id}/resultados`, undefined, (b) => (b && typeof (b as any).asambleaId === 'string' ? (b as any) : null));
+
+export const verificarComprobante = (codigo: string) => 
+  llamar<ComprobanteVerificacion>(`asambleas/comprobantes/verificar?codigo=${codigo}`, undefined, (b) => (b && typeof (b as any).valido === 'boolean' ? (b as any) : null));
+
+export const getAsambleas = () => 
+  llamar<Asamblea[]>('asambleas', undefined, (b: unknown) => (Array.isArray(b) ? b : null));

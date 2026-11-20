@@ -77,6 +77,11 @@ gestion_condominios_frontend_fresquitop
 │  │  │  │  └─ [id]
 │  │  │  │     └─ editar
 │  │  │  │        └─ page.tsx
+│  │  │  ├─ asambleas
+│  │  │  │  ├─ nuevo
+│  │  │  │  │  ├─ asamblea-form.tsx
+│  │  │  │  │  └─ page.tsx
+│  │  │  │  └─ page.tsx
 │  │  │  ├─ comunicados
 │  │  │  │  ├─ lista-comunicados.tsx
 │  │  │  │  ├─ nuevo
@@ -181,6 +186,7 @@ gestion_condominios_frontend_fresquitop
 │  │  ├─ accesos.ts
 │  │  ├─ areas.test.ts
 │  │  ├─ areas.ts
+│  │  ├─ asambleas.ts
 │  │  ├─ auth.ts
 │  │  ├─ comunicados.test.ts
 │  │  ├─ comunicados.ts
@@ -241,6 +247,7 @@ gestion_condominios_frontend_fresquitop
 │  ├─ api.ts
 │  ├─ areas.test.ts
 │  ├─ areas.ts
+│  ├─ asambleas.ts
 │  ├─ auth.ts
 │  ├─ comunicados.ts
 │  ├─ cuotas.ts
@@ -266,6 +273,7 @@ gestion_condominios_frontend_fresquitop
 │  ├─ types
 │  │  ├─ accesos.ts
 │  │  ├─ areas.ts
+│  │  ├─ asambleas.ts
 │  │  ├─ comunicados.ts
 │  │  ├─ cuotas.ts
 │  │  ├─ estado-cuenta.ts
@@ -280,6 +288,7 @@ gestion_condominios_frontend_fresquitop
 │  │  ├─ acceso.ts
 │  │  ├─ area.test.ts
 │  │  ├─ area.ts
+│  │  ├─ asamblea.ts
 │  │  ├─ comunicado.test.ts
 │  │  ├─ comunicado.ts
 │  │  ├─ cuota.test.ts

@@ -20,3 +20,8 @@ export type NuevaAsamblea = {
   fechaCierre: string;
   temas: { titulo: string; opciones: { texto: string }[] }[];
 };
+
+export type OpcionResultado = { opcionId: string; texto: string; votos: number; porcentaje: number };
+export type TemaResultado = { temaId: string; titulo: string; opciones: OpcionResultado[]; ganadora: string | null; empate: boolean; mensajeEmpate?: string };
+export type ResultadoAsamblea = { asambleaId: string; estado: string; participacion: number; temas: TemaResultado[] };
+export type ComprobanteVerificacion = { valido: boolean; tema: string; asamblea: string; fecha: string };
