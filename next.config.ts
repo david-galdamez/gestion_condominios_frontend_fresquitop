@@ -7,6 +7,11 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "6mb",
     },
   },
+  // Las cuotas del residente viven en "Estado de cuenta"; /cuotas no es una
+  // página propia y daba 404 (el administrador usa /admin/cuotas).
+  async redirects() {
+    return [{ source: "/cuotas", destination: "/estado-cuenta", permanent: false }];
+  },
 };
 
 export default nextConfig;

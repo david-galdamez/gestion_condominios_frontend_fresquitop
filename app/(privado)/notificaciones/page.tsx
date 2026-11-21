@@ -2,6 +2,12 @@ import { ModuloOrigenBadge } from "@/components/modulo-origen-badge";
 import { requireRol } from "@/lib/auth";
 import { getNotificaciones } from "@/lib/notificaciones";
 import Link from "next/link";
+import { rutaDeReferencia } from "@/lib/notificaciones-ui";
+import {
+  MarcarLeidaButton,
+  MarcarTodasButton,
+  TituloNotificacion,
+} from "./acciones-notificacion";
 
 export default async function NotificacionesPage({
   searchParams,
@@ -15,7 +21,12 @@ export default async function NotificacionesPage({
 
   return (
     <div className="flex max-w-3xl flex-col gap-6">
-      <h1 className="text-2xl font-semibold">Centro de Notificaciones</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-2xl font-semibold">Centro de Notificaciones</h1>
+        {data.datos.length > 0 && (
+          <MarcarTodasButton disabled={data.datos.every((n) => n.leida)} />
+        )}
+      </div>
 
       {data.datos.length === 0 ? (
         <p className="text-zinc-500">No tienes avisos</p>
@@ -23,9 +34,8 @@ export default async function NotificacionesPage({
         <>
           <div className="flex flex-col gap-3">
             {data.datos.map((n) => (
-              <Link
+              <div
                 key={n.id}
-                href={n.referencia || "#"}
                 className={`rounded-md border p-4 transition ${
                   n.leida
                     ? "border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900"
@@ -34,7 +44,13 @@ export default async function NotificacionesPage({
               >
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
                   <div className="min-w-0 flex-1">
-                    <p className="font-medium break-words">{n.titulo}</p>
+                    <TituloNotificacion
+                      id={n.id}
+                      href={rutaDeReferencia(n.referencia)}
+                      leida={n.leida}
+                    >
+                      {n.titulo}
+                    </TituloNotificacion>
                     <p className="text-sm text-zinc-600 break-words dark:text-zinc-400">
                       {n.mensaje}
                     </p>
@@ -44,10 +60,13 @@ export default async function NotificacionesPage({
                     className="self-start"
                   />
                 </div>
-                <p className="mt-2 text-xs text-zinc-500">
-                  {new Date(n.createdAt).toLocaleString("es-SV")}
-                </p>
-              </Link>
+                <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
+                  <p className="text-xs text-zinc-500">
+                    {new Date(n.createdAt).toLocaleString("es-SV")}
+                  </p>
+                  {!n.leida && <MarcarLeidaButton id={n.id} />}
+                </div>
+              </div>
             ))}
           </div>
 

@@ -13,6 +13,11 @@ vi.mock("@/lib/notificaciones", () => ({
   getNotificaciones: (pagina?: number) => mockGetNotificaciones(pagina),
 }));
 
+vi.mock("@/app/actions/notificaciones", () => ({
+  marcarNotificacionLeida: vi.fn(),
+  marcarTodasNotificacionesLeidas: vi.fn(),
+}));
+
 import NotificacionesPage from "./page";
 
 beforeEach(() => {
@@ -105,16 +110,20 @@ describe("NotificacionesPage (H17 / FE-18.1)", () => {
 
     const linkNoLeida = screen.getByRole("link", { name: /Pago confirmado/i });
     expect(linkNoLeida).toHaveAttribute("href", "/estado-cuenta");
-    expect(linkNoLeida.className).toContain("bg-blue-50");
+    expect(linkNoLeida.closest("div.rounded-md")?.className).toContain("bg-blue-50");
 
     const linkLeida = screen.getByRole("link", { name: /Paquete en portería/i });
-    expect(linkLeida).toHaveAttribute("href", "/paquetes");
-    expect(linkLeida.className).toContain("bg-white");
+    // El backend guarda /paquetes; la página del residente es /mis-paquetes.
+    expect(linkLeida).toHaveAttribute("href", "/mis-paquetes");
+    expect(linkLeida.closest("div.rounded-md")?.className).toContain("bg-white");
 
-    const linkSinReferencia = screen.getByRole("link", {
-      name: /Incidencia resuelta/i,
-    });
-    expect(linkSinReferencia).toHaveAttribute("href", "#");
+    // Sin referencia no hay enlace (antes apuntaba a "#").
+    expect(screen.queryByRole("link", { name: /Incidencia resuelta/i })).toBeNull();
+    expect(screen.getByText("Incidencia resuelta")).toBeInTheDocument();
+
+    // Solo las no leídas ofrecen el botón individual (2 de 3) y hay "todas".
+    expect(screen.getAllByRole("button", { name: "Marcar como leída" })).toHaveLength(2);
+    expect(screen.getByRole("button", { name: "Marcar todas como leídas" })).toBeEnabled();
 
     expect(screen.getByText("Página 1 de 3")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Siguiente" })).toHaveAttribute(
