@@ -1,6 +1,6 @@
 import "server-only";
 import { apiFetch } from "@/lib/api";
-import type { OpcionesPerfil, PerfilDirectorio } from "@/lib/types/perfil-directorio";
+import type { GuardarPerfil, PerfilDirectorio } from "@/lib/types/perfil-directorio";
 
 export type PerfilResultado =
   | { status: "ok"; data: PerfilDirectorio }
@@ -46,7 +46,7 @@ async function llamar(init?: RequestInit): Promise<PerfilResultado> {
 
 export const getMiPerfil = () => llamar();
 
-export const guardarMiPerfil = (o: OpcionesPerfil) =>
+export const guardarMiPerfil = (o: GuardarPerfil) =>
   llamar({
     method: "PUT",
     headers: { "Content-Type": "application/json" },

@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { guardarMiPerfil } from "@/lib/perfil-directorio";
 import type { PerfilDirectorio } from "@/lib/types/perfil-directorio";
 import {
+  normalizarTelefono,
   opcionesDesdeFormData,
   validarPerfil,
 } from "@/lib/validaciones/perfil-directorio";
@@ -24,10 +25,11 @@ export async function guardarPerfilDirectorio(
   if (!opciones) return { status: "error", error: ERROR_GENERAL };
 
   // Nunca se confía en el cliente: se valida de nuevo antes de llamar a la API.
-  const error = validarPerfil(opciones);
+  const telefono = String(formData.get("telefono") ?? "");
+  const error = validarPerfil(opciones, telefono);
   if (error) return { status: "error", error };
 
-  const r = await guardarMiPerfil(opciones);
+  const r = await guardarMiPerfil({ ...opciones, telefono: normalizarTelefono(telefono) });
   switch (r.status) {
     case "ok":
       revalidatePath("/directorio/mi-perfil");

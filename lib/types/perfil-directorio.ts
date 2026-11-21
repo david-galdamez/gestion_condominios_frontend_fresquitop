@@ -6,7 +6,7 @@ export type OpcionesPerfil = {
   mostrarCorreo: boolean;
 };
 
-// null = no existe (p. ej. el teléfono, que el registro todavía no guarda).
+// null = no registrado o no se muestra.
 export type DatosDirectorio = {
   nombre: string | null;
   unidad: string | null;
@@ -19,3 +19,6 @@ export type PerfilDirectorio = OpcionesPerfil & {
   // Solo los datos marcados; null si está oculto.
   vistaPrevia: DatosDirectorio | null;
 };
+
+// Lo que se envía al guardar: las opciones y el teléfono (null lo borra).
+export type GuardarPerfil = OpcionesPerfil & { telefono: string | null };
