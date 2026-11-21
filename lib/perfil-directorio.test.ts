@@ -30,15 +30,16 @@ describe("lib/perfil-directorio", () => {
     expect(await getMiPerfil()).toEqual({ status: "error" });
   });
 
-  it("guardarMiPerfil envía PUT JSON con las 5 opciones; 400 trae el mensaje", async () => {
+  it("guardarMiPerfil envía PUT JSON con las 5 opciones y el teléfono; 400 trae el mensaje", async () => {
+    const envio = { ...opciones, telefono: "7044-2727" };
     apiFetch.mockResolvedValueOnce(resp(200, perfil));
-    expect(await guardarMiPerfil(opciones)).toMatchObject({ status: "ok" });
+    expect(await guardarMiPerfil(envio)).toMatchObject({ status: "ok" });
     const [path, init] = apiFetch.mock.calls[0];
     expect(path).toBe("directorio/mi-perfil");
     expect(init.method).toBe("PUT");
-    expect(JSON.parse(init.body)).toEqual(opciones);
+    expect(JSON.parse(init.body)).toEqual(envio);
     apiFetch.mockResolvedValueOnce(resp(400, { message: ["Elige al menos un dato para mostrar"] }));
-    expect(await guardarMiPerfil(opciones)).toEqual({
+    expect(await guardarMiPerfil({ ...opciones, telefono: null })).toEqual({
       status: "bad_request",
       messages: ["Elige al menos un dato para mostrar"],
     });

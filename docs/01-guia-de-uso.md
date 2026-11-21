@@ -12,7 +12,7 @@ La descripción completa de cada flujo y sus reglas de negocio está en la
 
 | Rol | Pantallas |
 |---|---|
-| Residente | Inicio, Estado de cuenta (`/estado-cuenta`), Visitas (`/visitas`, `/visitas/nueva`, `/visitas/{id}/editar`), Mis reportes (`/reportes`, `/reportes/nuevo`, `/reportes/{numero}`), Comunicados (`/comunicados`, `/comunicados/{id}`). |
+| Residente | Inicio, Estado de cuenta (`/estado-cuenta`), Visitas (`/visitas`, `/visitas/nueva`, `/visitas/{id}/editar`), Mis reportes (`/reportes`, `/reportes/nuevo`, `/reportes/{numero}`), Comunicados (`/comunicados`, `/comunicados/{id}`), Directorio (`/directorio`) y Mi directorio (`/directorio/mi-perfil`). |
 | Administrador | Inicio, Áreas comunes (`/admin/areas`, nueva y editar), Morosidad (`/admin/morosidad`), Comunicados (`/admin/comunicados`, `/admin/comunicados/nuevo`), Panel (`/admin/panel`, con el botón Exportar). |
 | Seguridad | Inicio, Paquetes (`/porteria/paquetes`, `/porteria/paquetes/nuevo`). |
 
@@ -94,3 +94,17 @@ opcional y foto. La lista muestra los paquetes en portería y retenidos.
 2. En el diálogo elegir Formato (PDF o Excel, por defecto PDF) y Versión (Detallada o Resumida, por defecto Resumida). La resumida solo trae totales, sin unidades ni nombres.
 3. **Descargar** se deshabilita con “Generando...” mientras se crea el archivo (no permite dos descargas a la vez); al terminar descarga `reporte-condominio-AAAA-MM-DD.pdf` o `.xlsx` y cierra el diálogo.
 4. Si falla se ve “No pudimos generar el archivo. Intenta de nuevo.” y el diálogo queda abierto para reintentar.
+
+### Módulo 8: Directorio de residentes
+
+#### Mi perfil de directorio y teléfono (Residente, H15 + hotfix 1.0.1)
+
+1. Menú **Mi directorio**: escribir el teléfono (opcional, 8 dígitos que empiezan con 2, 6 o 7, con o sin guion; vacío lo borra).
+2. Activar “Aparecer en el directorio” y marcar qué datos mostrar. La vista previa muestra cómo te ven tus vecinos.
+3. Para marcar “Teléfono” hay que tenerlo registrado (“Registra tu teléfono para poder mostrarlo”).
+
+#### Buscar el contacto de un vecino (Residente, H16 + hotfix 1.0.1)
+
+1. Menú **Directorio** (o “Buscar vecinos” desde Mi directorio). La pantalla tiene el encabezado con el menú para volver.
+2. Escribir de 2 a 60 caracteres del nombre o la unidad (no distingue mayúsculas ni acentos).
+3. Cada vecino aparece solo con los datos que autorizó; los que ocultan su nombre se encuentran por su unidad.
