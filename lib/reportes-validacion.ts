@@ -8,6 +8,9 @@ export const DESCRIPCION_MIN = 10;
 export const DESCRIPCION_MAX = 500;
 export const MAX_FOTOS = 5;
 export const MAX_FOTO_BYTES = 5 * 1024 * 1024;
+// Tope del conjunto de fotos por envío (Vercel acepta ~4.5 MB por petición).
+export const MAX_TOTAL_FOTOS_BYTES = 4 * 1024 * 1024;
+export const MENSAJE_TOTAL_FOTOS = "Las fotos pesan demasiado en conjunto. Quita alguna e inténtalo de nuevo.";
 export const TIPOS_FOTO = ["image/jpeg", "image/png"];
 
 export const MENSAJE_TITULO = `El título debe tener entre ${TITULO_MIN} y ${TITULO_MAX} caracteres`;

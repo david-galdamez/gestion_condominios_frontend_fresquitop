@@ -3,11 +3,14 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { comprimirImagen, MAX_ORIGINAL_BYTES } from "@/lib/comprimir-imagen";
 import { CATEGORIA_LABEL } from "@/lib/reportes-ui";
 import {
   DESCRIPCION_MAX,
   MAX_FOTOS,
+  MAX_TOTAL_FOTOS_BYTES,
   MENSAJE_FOTOS,
+  MENSAJE_TOTAL_FOTOS,
   TITULO_MAX,
   validarCampos,
   validarFoto,
@@ -79,11 +82,15 @@ export function ReporteForm({ ubicaciones }: { ubicaciones: Ubicaciones }) {
     setErrores((prev) => ({ ...prev, [campo]: undefined }));
   }
 
-  function agregarArchivos(archivos: File[]) {
+  async function agregarArchivos(archivos: File[]) {
     const nuevas: FotoLocal[] = [];
     let rechazado = false;
 
-    for (const file of archivos) {
+    for (const original of archivos) {
+      // Se comprime antes de validar: una foto de celular de 8 MB queda en
+      // unos cientos de KB y cabe en el límite de petición de la plataforma.
+      const file =
+        original.size > MAX_ORIGINAL_BYTES ? original : await comprimirImagen(original);
       if (validarFoto(file, fotos.length + nuevas.length) !== null) {
         rechazado = true;
         continue;
@@ -114,6 +121,11 @@ export function ReporteForm({ ubicaciones }: { ubicaciones: Ubicaciones }) {
     const erroresCampos = validarCampos({ titulo, categoria, ubicacion, descripcion });
     setErrores(erroresCampos);
     if (Object.keys(erroresCampos).length > 0) return;
+
+    if (fotos.reduce((t, f) => t + f.file.size, 0) > MAX_TOTAL_FOTOS_BYTES) {
+      setErrorFotos(MENSAJE_TOTAL_FOTOS);
+      return;
+    }
 
     const datos = new FormData();
     datos.append("titulo", titulo.trim());
@@ -291,7 +303,7 @@ export function ReporteForm({ ubicaciones }: { ubicaciones: Ubicaciones }) {
               Arrastra y suelta tus fotos aquí
             </p>
             <p className="text-xs text-zinc-500">
-              Solo JPG o PNG de hasta 5 MB, máximo {MAX_FOTOS} fotos
+              Solo JPG o PNG, máximo {MAX_FOTOS} fotos (se reducen automáticamente)
             </p>
             <button
               type="button"

@@ -6,9 +6,12 @@ import {
   registrarPaqueteAction,
   type RegistrarPaqueteState,
 } from "@/app/actions/paquetes";
+import { comprimirImagen, MAX_ORIGINAL_BYTES } from "@/lib/comprimir-imagen";
 import type { UnidadResumen } from "@/lib/types/paquetes";
 import {
   MENSAJERIAS,
+  MSG,
+  TIPOS_FOTO,
   validarDestinatario,
   validarFoto,
   validarGuia,
@@ -63,23 +66,34 @@ export function PaqueteForm({ unidades }: { unidades: UnidadResumen[] }) {
     setErrCliente((e) => ({ ...e, [k]: error }));
   }
 
-  function elegirFoto(e: React.ChangeEvent<HTMLInputElement>) {
-    const archivo = e.target.files?.[0] ?? null;
-    const error = validarFoto(archivo);
-    setErrCliente((x) => ({ ...x, foto: archivo ? error : undefined }));
+  async function elegirFoto(e: React.ChangeEvent<HTMLInputElement>) {
+    const input = e.target;
+    const original = input.files?.[0] ?? null;
+    if (!original) {
+      setErrCliente((x) => ({ ...x, foto: undefined }));
+      setFoto(null);
+      return;
+    }
+    // Tipo y tope del original; después se reduce en el navegador para no
+    // superar el límite de petición de la plataforma (Vercel ~4.5 MB).
+    const rechazado =
+      !TIPOS_FOTO.includes(original.type) || original.size > MAX_ORIGINAL_BYTES;
+    const archivo = rechazado ? original : await comprimirImagen(original);
+    const error = rechazado ? MSG.foto : validarFoto(archivo);
+    setErrCliente((x) => ({ ...x, foto: error }));
     setFoto(
-      archivo && !error
-        ? {
+      error
+        ? null
+        : {
             archivo,
             vista:
               typeof URL.createObjectURL === "function"
                 ? URL.createObjectURL(archivo)
                 : null,
-          }
-        : null,
+          },
     );
     // Un archivo rechazado no queda seleccionado.
-    if (error) e.target.value = "";
+    if (error) input.value = "";
   }
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
