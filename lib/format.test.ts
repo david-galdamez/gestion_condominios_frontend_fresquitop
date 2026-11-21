@@ -1,5 +1,13 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { esFechaValida, formatFecha, formatPeriodo, formatUsd } from "./format";
+import {
+  esFechaValida,
+  fechaEnRango,
+  formatFecha,
+  formatPeriodo,
+  formatUsd,
+  hoyEnElSalvador,
+  sumarDias,
+} from "./format";
 
 describe("formatUsd", () => {
   it("usa 2 decimales y moneda USD", () => {
@@ -58,4 +66,51 @@ describe("esFechaValida", () => {
     "2026-00-10", "2026-10-00", "2026-10-32", "26-10-10", "2026/10/10",
     "2026-1-1", "", "abcd-ef-gh", "2026-10-10T00:00", " 2026-10-10",
   ])("inválida: %s", (f) => expect(esFechaValida(f)).toBe(false));
+});
+
+describe("hoyEnElSalvador", () => {
+  afterEach(() => vi.useRealTimers());
+
+  it("a las 02:00 UTC todavía es el día anterior en El Salvador (UTC-6)", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-11-05T02:00:00Z"));
+    expect(hoyEnElSalvador()).toBe("2026-11-04");
+  });
+
+  it("a las 06:00 UTC ya es el día nuevo", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-11-05T06:00:00Z"));
+    expect(hoyEnElSalvador()).toBe("2026-11-05");
+  });
+
+  it("cruza el fin de año", () => {
+    expect(hoyEnElSalvador(new Date("2027-01-01T05:59:00Z"))).toBe("2026-12-31");
+  });
+});
+
+describe("sumarDias", () => {
+  it("suma dentro del mes y cruzando mes y año", () => {
+    expect(sumarDias("2026-11-04", 1)).toBe("2026-11-05");
+    expect(sumarDias("2026-11-04", 30)).toBe("2026-12-04");
+    expect(sumarDias("2026-12-31", 1)).toBe("2027-01-01");
+  });
+  it("respeta bisiestos y restas", () => {
+    expect(sumarDias("2028-02-28", 1)).toBe("2028-02-29");
+    expect(sumarDias("2027-02-28", 1)).toBe("2027-03-01");
+    expect(sumarDias("2026-03-01", -1)).toBe("2026-02-28");
+  });
+});
+
+describe("fechaEnRango", () => {
+  const hoy = "2026-11-04";
+  it("acepta hoy y hoy+30", () => {
+    expect(fechaEnRango("2026-11-04", hoy, 30)).toBe(true);
+    expect(fechaEnRango("2026-12-04", hoy, 30)).toBe(true);
+  });
+  it("rechaza ayer, hoy+31 y fechas inexistentes o mal formadas", () => {
+    expect(fechaEnRango("2026-11-03", hoy, 30)).toBe(false);
+    expect(fechaEnRango("2026-12-05", hoy, 30)).toBe(false);
+    expect(fechaEnRango("2026-11-31", hoy, 30)).toBe(false);
+    expect(fechaEnRango("", hoy, 30)).toBe(false);
+  });
 });
