@@ -1,8 +1,20 @@
+export const MODULOS_ORIGEN = [
+  "PAGOS",
+  "RESERVAS",
+  "INCIDENCIAS",
+  "VISITAS",
+  "PAQUETERIA",
+  "VOTACIONES",
+  "COMUNICADOS",
+] as const;
+
+export type ModuloOrigen = (typeof MODULOS_ORIGEN)[number];
+
 export type Notificacion = {
   id: string;
   titulo: string;
   mensaje: string;
-  moduloOrigen: string;
+  moduloOrigen: ModuloOrigen | (string & {});
   referencia: string | null;
   leida: boolean;
   leidaEn: string | null;

@@ -7,6 +7,7 @@ import { requireRol } from "@/lib/auth";
 import { getAdminReporteDetalle } from "@/lib/reportes";
 import { CATEGORIA_LABEL, formatFechaHora } from "@/lib/reportes-ui";
 import { AsignacionReporteForm } from "./asignacion-form";
+import { ResolverReporteDialog } from "./resolver-reporte-dialog";
 
 export const metadata: Metadata = { title: "Detalle de reporte" };
 
@@ -96,6 +97,16 @@ export default async function AdminReporteDetallePage({
                   {formatFechaHora(rep.creadoEn)}
                 </dd>
               </div>
+              {rep.resueltoEn && (
+                <div>
+                  <dt className="text-zinc-600 dark:text-zinc-400">
+                    Resuelto el
+                  </dt>
+                  <dd className="font-medium tabular-nums">
+                    {formatFechaHora(rep.resueltoEn)}
+                  </dd>
+                </div>
+              )}
             </dl>
 
             <div className="mt-4 border-t border-zinc-200 pt-4 dark:border-zinc-800">
@@ -165,12 +176,17 @@ export default async function AdminReporteDetallePage({
           </section>
         </div>
 
-        <aside>
+        <aside className="flex flex-col gap-4">
           <AsignacionReporteForm
             reporteId={rep.id}
             estadoInicial={rep.estado}
             prioridadInicial={rep.prioridad}
             responsableInicial={rep.responsable}
+          />
+          <ResolverReporteDialog
+            reporteId={rep.id}
+            numero={rep.numero}
+            estadoInicial={rep.estado}
           />
         </aside>
       </div>

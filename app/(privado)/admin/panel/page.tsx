@@ -3,6 +3,7 @@ import { requireRol } from "@/lib/auth";
 import { formatFecha, formatUsd } from "@/lib/format";
 import { getPanel } from "@/lib/panel";
 import { resolverPeriodo, type SearchParamsPanel } from "@/lib/panel-periodo";
+import { ExportarReporte } from "./exportar-reporte";
 import { ReintentarButton } from "./reintentar-button";
 import { SelectorPeriodo } from "./selector-periodo";
 import { formatPorcentaje, Variacion } from "./variacion";
@@ -28,14 +29,22 @@ export default async function PanelPage({
   await requireRol("ADMINISTRADOR");
   const periodo = resolverPeriodo(await searchParams);
 
-  const encabezado = (
-    <div className="flex flex-col gap-1">
-      <h1 className="text-2xl font-semibold">Panel del Condominio</h1>
-      <p className="text-sm text-zinc-600 dark:text-zinc-400">
-        {periodo.error
-          ? "Elige un periodo para ver los indicadores."
-          : `Del ${formatFecha(periodo.desde)} al ${formatFecha(periodo.hasta)}`}
-      </p>
+  const descripcion = `Del ${formatFecha(periodo.desde)} al ${formatFecha(periodo.hasta)}`;
+
+  // H20: el botón Exportar usa exactamente el periodo de la pantalla; sin un
+  // periodo válido queda deshabilitado ("Selecciona un periodo").
+  const encabezado = (periodoValido: boolean) => (
+    <div className="flex flex-wrap items-start justify-between gap-3">
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl font-semibold">Panel del Condominio</h1>
+        <p className="text-sm text-zinc-600 dark:text-zinc-400">
+          {periodo.error ? "Elige un periodo para ver los indicadores." : descripcion}
+        </p>
+      </div>
+      <ExportarReporte
+        periodo={periodoValido ? { desde: periodo.desde, hasta: periodo.hasta } : null}
+        descripcion={descripcion.toLowerCase()}
+      />
     </div>
   );
 
@@ -50,7 +59,7 @@ export default async function PanelPage({
   if (periodo.error) {
     return (
       <div className="flex flex-col gap-4">
-        {encabezado}
+        {encabezado(false)}
         {selector}
         <p role="alert" className="text-sm text-red-600">
           {periodo.error}
@@ -85,7 +94,7 @@ export default async function PanelPage({
   if (r.status === "bad_request") {
     return (
       <div className="flex flex-col gap-4">
-        {encabezado}
+        {encabezado(false)}
         {selector}
         <p role="alert" className="text-sm text-red-600">
           {r.message}
@@ -103,7 +112,7 @@ export default async function PanelPage({
 
   return (
     <div className="flex flex-col gap-6">
-      {encabezado}
+      {encabezado(true)}
       {selector}
 
       <section

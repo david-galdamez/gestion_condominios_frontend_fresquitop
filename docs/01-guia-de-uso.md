@@ -13,7 +13,7 @@ La descripción completa de cada flujo y sus reglas de negocio está en la
 | Rol | Pantallas |
 |---|---|
 | Residente | Inicio, Estado de cuenta (`/estado-cuenta`), Visitas (`/visitas`, `/visitas/nueva`, `/visitas/{id}/editar`), Mis reportes (`/reportes`, `/reportes/nuevo`, `/reportes/{numero}`), Comunicados (`/comunicados`, `/comunicados/{id}`). |
-| Administrador | Inicio, Áreas comunes (`/admin/areas`, nueva y editar), Morosidad (`/admin/morosidad`), Comunicados (`/admin/comunicados`, `/admin/comunicados/nuevo`). |
+| Administrador | Inicio, Áreas comunes (`/admin/areas`, nueva y editar), Morosidad (`/admin/morosidad`), Comunicados (`/admin/comunicados`, `/admin/comunicados/nuevo`), Panel (`/admin/panel`, con el botón Exportar). |
 | Seguridad | Inicio, Paquetes (`/porteria/paquetes`, `/porteria/paquetes/nuevo`). |
 
 ## Flujos principales
@@ -85,3 +85,12 @@ opcional y foto. La lista muestra los paquetes en portería y retenidos.
 3. Al abrir un comunicado se ve su contenido y queda leído; el contador baja en 1.
 4. La pestaña **Archivo** lista los comunicados expirados.
 5. Si una pestaña está vacía se ve “No hay comunicados”. Un comunicado de otra torre abierto por enlace muestra “Comunicado no encontrado”.
+
+### Módulo 10: Reportes financieros y analíticos
+
+#### Exportar el reporte para la mesa directiva (Administrador, H20)
+
+1. Menú **Panel**: elegir el periodo y pulsar **Exportar** (deshabilitado con “Selecciona un periodo” si el periodo no es válido).
+2. En el diálogo elegir Formato (PDF o Excel, por defecto PDF) y Versión (Detallada o Resumida, por defecto Resumida). La resumida solo trae totales, sin unidades ni nombres.
+3. **Descargar** se deshabilita con “Generando...” mientras se crea el archivo (no permite dos descargas a la vez); al terminar descarga `reporte-condominio-AAAA-MM-DD.pdf` o `.xlsx` y cierra el diálogo.
+4. Si falla se ve “No pudimos generar el archivo. Intenta de nuevo.” y el diálogo queda abierto para reintentar.

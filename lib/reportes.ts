@@ -8,6 +8,8 @@ import type {
   AsignarReportePayload,
   Reporte,
   ReportesRespuesta,
+  ResolverReportePayload,
+  ResolverReporteRespuesta,
   Ubicaciones,
 } from "@/lib/types/reportes";
 
@@ -101,7 +103,16 @@ export async function getReporte(numero: string): Promise<ReporteResultado> {
   if (res.status === 404) return { status: "not_found" };
   if (!res.ok) return { status: "error" };
   const body = await res.json().catch(() => null);
-  return esReporte(body) ? { status: "ok", data: body } : { status: "error" };
+  if (!esReporte(body)) return { status: "error" };
+  return {
+    status: "ok",
+    data: {
+      ...body,
+      resueltoEn: body.resueltoEn ?? null,
+      comentarioCierre: body.comentarioCierre ?? null,
+      historial: Array.isArray(body.historial) ? body.historial : [],
+    },
+  };
 }
 
 export type UbicacionesResultado =
@@ -157,7 +168,15 @@ export async function getAdminReporteDetalle(
   if (!res.ok) return { status: "error" };
 
   const body = await res.json().catch(() => null);
-  return esDetalleAdmin(body) ? { status: "ok", data: body } : { status: "error" };
+  if (!esDetalleAdmin(body)) return { status: "error" };
+  return {
+    status: "ok",
+    data: {
+      ...body,
+      resueltoEn: body.resueltoEn ?? null,
+      comentarioCierre: body.comentarioCierre ?? null,
+    },
+  };
 }
 
 export type AsignarReporteApiResultado =
@@ -202,6 +221,60 @@ export async function asignarReporteApi(
     return {
       status: "conflict",
       message: extraerMensajeApi(body, "No se puede modificar un reporte resuelto"),
+    };
+  }
+  return { status: "error" };
+}
+
+// H24 — Marcar reporte como Resuelto
+export type ResolverReporteApiResultado =
+  | { status: "ok"; data: ResolverReporteRespuesta }
+  | { status: "bad_request"; message: string }
+  | { status: "conflict"; message: string }
+  | { status: "not_found"; message: string }
+  | { status: "forbidden" }
+  | { status: "error" };
+
+export async function resolverReporteApi(
+  id: string,
+  payload: ResolverReportePayload,
+): Promise<ResolverReporteApiResultado> {
+  const res = await pedir(`admin/reportes/${encodeURIComponent(id)}/resolver`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res) return { status: "error" };
+
+  const body = await res.json().catch(() => null);
+
+  if (res.ok && body && typeof body.id === "string") {
+    return { status: "ok", data: body as ResolverReporteRespuesta };
+  }
+  if (res.status === 400) {
+    return {
+      status: "bad_request",
+      message: extraerMensajeApi(
+        body,
+        "El comentario debe tener entre 10 y 300 caracteres",
+      ),
+    };
+  }
+  if (res.status === 403) return { status: "forbidden" };
+  if (res.status === 404) {
+    return {
+      status: "not_found",
+      message: extraerMensajeApi(body, "Reporte no encontrado"),
+    };
+  }
+  if (res.status === 409) {
+    return {
+      status: "conflict",
+      message: extraerMensajeApi(
+        body,
+        "Solo se pueden resolver reportes En proceso",
+      ),
     };
   }
   return { status: "error" };
