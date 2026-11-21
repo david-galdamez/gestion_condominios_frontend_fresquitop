@@ -47,7 +47,7 @@ gestion_condominios_frontend_fresquitop
 │   │   ├── porteria/paquetes/ # H09
 │   │   └── admin/             # areas (H03), morosidad (H22), comunicados (H13)
 │   ├── actions/               # Server Actions: validan y llaman a lib/*
-│   └── api/                   # Route Handlers (sesión expirada, fotos de reportes)
+│   └── api/                   # Route Handlers (sesión expirada, fotos de reportes, exportar reporte H20)
 ├── components/                # componentes compartidos (badges, copiar)
 ├── lib/
 │   ├── api.ts                 # fetch autenticado contra el backend

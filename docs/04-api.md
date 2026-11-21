@@ -69,3 +69,10 @@ El resumen de endpoints por módulo y sus roles está en la
 | GET | /api/v1/comunicados/mios | `lib/comunicados.ts` | Residente |
 | GET | /api/v1/comunicados/no-leidos/conteo | `lib/comunicados.ts` (y la Server Action `contarNoLeidos`) | Residente |
 | GET | /api/v1/comunicados/mios/{id} | `lib/comunicados.ts` | Residente |
+
+### Módulo 10: Reportes financieros y analíticos
+
+| Método | Ruta | Desde | Roles |
+|---|---|---|---|
+| GET | /api/v1/admin/panel | `lib/panel.ts` | Administrador |
+| GET | /api/v1/admin/reportescondominio/exportar | Route Handler `app/api/reportes-condominio/exportar` (reenvía el archivo con el token; el navegador no lo tiene) | Administrador |
