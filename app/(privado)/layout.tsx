@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { logout } from "@/app/actions/auth";
 import { SessionProvider } from "@/components/session-provider";
 import { getSessionUser, type Rol } from "@/lib/session";
+import { CampanaNotificaciones } from '@/components/campana-notificaciones';
+import { getConteoNoLeidas } from '@/lib/notificaciones';
 
 const ROL_LABEL: Record<Rol, string> = {
   RESIDENTE: "Residente",
@@ -28,6 +30,7 @@ const MENU: { href: string; label: string; roles?: Rol[] }[] = [
   { href: "/admin/morosidad", label: "Morosidad", roles: ["ADMINISTRADOR"] },
   { href: "/admin/comunicados", label: "Comunicados", roles: ["ADMINISTRADOR"] },
   { href: "/admin/asambleas", label: "Asambleas", roles: ["ADMINISTRADOR"] },
+    { href: "/notificaciones", label: "Notificaciones", roles: ["RESIDENTE"] },
 ];
 
 export default async function PrivadoLayout({
@@ -37,6 +40,8 @@ export default async function PrivadoLayout({
   if (!user) redirect("/api/sesion/expirada");
 
   const links = MENU.filter((l) => !l.roles || l.roles.includes(user.rol));
+
+  const conteo = user.rol === 'RESIDENTE' ? await getConteoNoLeidas() : { noLeidas: 0 };
 
   return (
     <SessionProvider user={user}>
@@ -54,6 +59,9 @@ export default async function PrivadoLayout({
               </Link>
             ))}
           </nav>
+          {user.rol === 'RESIDENTE' && (
+            <CampanaNotificaciones inicial={conteo.noLeidas} />
+          )}
           <div className="text-right text-sm leading-tight">
             <div className="font-medium">{user.nombre}</div>
             <div className="text-xs text-zinc-500">{ROL_LABEL[user.rol]}</div>
