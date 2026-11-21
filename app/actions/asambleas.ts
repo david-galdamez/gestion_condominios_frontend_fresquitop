@@ -81,6 +81,7 @@ export async function accionPublicarAsamblea(id: string): Promise<PublicarAsambl
   switch (r.status) {
     case 'ok':
       revalidatePath(RUTA_LISTA);
+      revalidatePath(RUTA_RESIDENTE);
       return { ok: true, unidadesConvocadas: r.data.unidadesConvocadas };
     case 'bad_request':
       return { ok: false, error: r.messages[0] ?? MSG.publicar };
