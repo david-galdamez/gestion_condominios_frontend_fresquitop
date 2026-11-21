@@ -5,6 +5,7 @@ import { EstadoReporteBadge } from "@/components/estado-reporte-badge";
 import { requireRol } from "@/lib/auth";
 import { getReporte } from "@/lib/reportes";
 import { CATEGORIA_LABEL, formatFechaHora } from "@/lib/reportes-ui";
+import { MSG_RESOLUCION } from "@/lib/validaciones/reporte-resolucion";
 
 type SearchParams = { [key: string]: string | string[] | undefined };
 
@@ -68,6 +69,15 @@ export default async function ReporteDetallePage({
         <EstadoReporteBadge estado={rep.estado} />
       </div>
 
+      {rep.estado === "RESUELTO" && (
+        <div
+          role="note"
+          className="rounded-lg border border-green-300 bg-green-50 p-4 text-sm text-green-900 dark:border-green-900 dark:bg-green-950/60 dark:text-green-200"
+        >
+          <p>{MSG_RESOLUCION.notaResueltoResidente}</p>
+        </div>
+      )}
+
       <dl className="grid gap-4 text-sm sm:grid-cols-3">
         <div>
           <dt className="text-zinc-600 dark:text-zinc-400">Categoría</dt>
@@ -85,6 +95,14 @@ export default async function ReporteDetallePage({
             {formatFechaHora(rep.creadoEn)}
           </dd>
         </div>
+        {rep.resueltoEn && (
+          <div>
+            <dt className="text-zinc-600 dark:text-zinc-400">Resuelto</dt>
+            <dd className="font-medium tabular-nums">
+              {formatFechaHora(rep.resueltoEn)}
+            </dd>
+          </div>
+        )}
       </dl>
 
       <section className="flex flex-col gap-1">
@@ -121,10 +139,76 @@ export default async function ReporteDetallePage({
         </section>
       )}
 
+      <section
+        aria-labelledby="historial-estados-titulo"
+        className="rounded-xl border border-zinc-300 bg-background p-4 sm:p-5 dark:border-zinc-800"
+      >
+        <h2
+          id="historial-estados-titulo"
+          className="mb-4 text-base font-semibold"
+        >
+          Historial de estados
+        </h2>
+        {rep.historial.length === 0 ? (
+          <p className="text-sm text-zinc-500">
+            Aún no hay movimientos registrados para este reporte.
+          </p>
+        ) : (
+          <ol className="relative flex flex-col gap-4 border-l-2 border-zinc-200 pl-5 dark:border-zinc-800">
+            {rep.historial.map((item) => {
+              const esResuelto = item.estado === "RESUELTO";
+              return (
+                <li key={item.id} className="relative">
+                  <span
+                    aria-hidden="true"
+                    className={`absolute -left-[27px] top-1.5 h-3 w-3 rounded-full border-2 border-background ${
+                      esResuelto
+                        ? "bg-green-600 dark:bg-green-400"
+                        : item.estado === "EN_PROCESO"
+                          ? "bg-blue-600 dark:bg-blue-400"
+                          : "bg-amber-500 dark:bg-amber-400"
+                    }`}
+                  />
+                  <div
+                    className={`rounded-lg border p-3 text-sm ${
+                      esResuelto
+                        ? "border-green-300 bg-green-50/70 dark:border-green-900 dark:bg-green-950/40"
+                        : "border-zinc-200 dark:border-zinc-800"
+                    }`}
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <EstadoReporteBadge estado={item.estado} />
+                      <time
+                        dateTime={item.fecha}
+                        className="text-xs text-zinc-600 tabular-nums dark:text-zinc-400"
+                      >
+                        {formatFechaHora(item.fecha)}
+                      </time>
+                    </div>
+                    {item.comentario && (
+                      <div className="mt-2">
+                        {esResuelto && (
+                          <p className="text-xs font-semibold text-green-800 dark:text-green-300">
+                            Comentario de resolución
+                          </p>
+                        )}
+                        <p className="mt-0.5 whitespace-pre-wrap text-sm text-foreground">
+                          {item.comentario}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+        )}
+      </section>
+
       <div>
         <Link
           href="/reportes"
-          className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm dark:border-zinc-700"
+          className="inline-block rounded-md border border-zinc-300 px-3 py-1.5 text-sm dark:border-zinc-700"
         >
           Volver a mis reportes
         </Link>

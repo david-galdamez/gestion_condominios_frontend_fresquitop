@@ -40,10 +40,20 @@ export type ReporteResumen = {
   creadoEn: string; // ISO 8601
 };
 
+export type HistorialReporteResidenteItem = {
+  id: string;
+  estado: EstadoReporte;
+  fecha: string; // ISO 8601
+  comentario: string | null;
+};
+
 export type Reporte = ReporteResumen & {
   ubicacion: string;
   descripcion: string;
   fotos: string[]; // rutas de descarga del backend
+  resueltoEn: string | null;
+  comentarioCierre: string | null;
+  historial: HistorialReporteResidenteItem[];
 };
 
 export type ReportesRespuesta = {
@@ -105,6 +115,8 @@ export type HistorialReporteItem = {
 
 export type AdminReporteDetalle = AdminReporteItem & {
   descripcion: string;
+  resueltoEn: string | null;
+  comentarioCierre: string | null;
   evidencias: EvidenciaDetalle[];
   historial: HistorialReporteItem[];
 };
@@ -126,4 +138,16 @@ export type AsignacionReporteRespuesta = {
   estado: EstadoReporte;
   prioridad: PrioridadReporte;
   responsable: string;
+};
+
+// H24 — Tipos para resolución de reportes
+export type ResolverReportePayload = {
+  comentario: string;
+};
+
+export type ResolverReporteRespuesta = {
+  id: string;
+  numero: string;
+  estado: EstadoReporte;
+  resueltoEn: string;
 };
