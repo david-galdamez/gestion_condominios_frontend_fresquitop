@@ -23,8 +23,15 @@ export function Navbar({
   const pathname = usePathname();
   const [abierto, setAbierto] = useState(false);
 
-  const activo = (href: string) =>
+  const coincide = (href: string) =>
     href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+  // Solo el enlace más específico: en /directorio/mi-perfil se marca
+  // "Mi directorio" y no también "Directorio" (hotfix 1.0.1).
+  const masEspecifico = links
+    .map((l) => l.href)
+    .filter(coincide)
+    .sort((a, b) => b.length - a.length)[0];
+  const activo = (href: string) => href === masEspecifico;
 
   const claseEnlace = (href: string) =>
     `rounded-md px-2.5 py-1.5 text-sm transition-colors ${
