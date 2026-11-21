@@ -51,12 +51,10 @@ export default async function DirectorioPage({
 
   if (user.rol !== "RESIDENTE") {
     return (
-      <main className="mx-auto w-full max-w-5xl px-4 py-10">
-        <section className="rounded-xl border border-red-200 bg-red-50 p-6 text-red-900">
-          <h1 className="text-xl font-semibold">No tienes permiso para esta acción</h1>
-          <p className="mt-2 text-sm">El directorio de vecinos está disponible únicamente para residentes.</p>
-        </section>
-      </main>
+      <section className="rounded-xl border border-red-200 bg-red-50 p-6 text-red-900">
+        <h1 className="text-xl font-semibold">No tienes permiso para esta acción</h1>
+        <p className="mt-2 text-sm">El directorio de vecinos está disponible únicamente para residentes.</p>
+      </section>
     );
   }
 
@@ -96,13 +94,20 @@ export default async function DirectorioPage({
   const totalPaginas = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-      <header className="mb-8">
-        <p className="text-sm font-medium text-blue-700">Comunidad</p>
-        <h1 className="mt-1 text-3xl font-bold tracking-tight text-zinc-900">Directorio de vecinos</h1>
-        <p className="mt-2 max-w-2xl text-sm text-zinc-600">
-          Busca por nombre o por unidad. Cada vecino aparece únicamente con los datos que autorizó mostrar.
-        </p>
+    // Hotfix 1.0.1: la pantalla vive en (privado), así hereda el encabezado
+    // con el menú y siempre hay forma de volver.
+    <div className="flex flex-col">
+      <header className="mb-8 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p className="text-sm font-medium text-blue-700 dark:text-blue-400">Comunidad</p>
+          <h1 className="mt-1 text-3xl font-bold tracking-tight">Directorio de vecinos</h1>
+          <p className="mt-2 max-w-2xl text-sm text-zinc-600 dark:text-zinc-400">
+            Busca por nombre o por unidad. Cada vecino aparece únicamente con los datos que autorizó mostrar.
+          </p>
+        </div>
+        <Link href="/directorio/mi-perfil" className="text-sm underline">
+          Configurar mi perfil
+        </Link>
       </header>
 
       <section className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
@@ -138,7 +143,7 @@ export default async function DirectorioPage({
       {busquedaRealizada && !error ? (
         <section className="mt-8" aria-live="polite">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-            <h2 className="text-lg font-semibold text-zinc-900">Resultados de búsqueda</h2>
+            <h2 className="text-lg font-semibold">Resultados de búsqueda</h2>
             <p className="text-sm text-zinc-500">{total} {total === 1 ? "vecino encontrado" : "vecinos encontrados"}</p>
           </div>
 
@@ -177,13 +182,13 @@ export default async function DirectorioPage({
           {totalPaginas > 1 ? (
             <nav aria-label="Paginación del directorio" className="mt-6 flex items-center justify-between gap-3">
               {paginaActual > 1 ? (
-                <Link href={construirUrl(q, paginaActual - 1)} className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50">
+                <Link href={construirUrl(q, paginaActual - 1)} className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-900">
                   Página anterior
                 </Link>
               ) : <span />}
-              <span className="text-sm text-zinc-600">Página {paginaActual} de {totalPaginas}</span>
+              <span className="text-sm text-zinc-600 dark:text-zinc-400">Página {paginaActual} de {totalPaginas}</span>
               {paginaActual < totalPaginas ? (
-                <Link href={construirUrl(q, paginaActual + 1)} className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50">
+                <Link href={construirUrl(q, paginaActual + 1)} className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-900">
                   Página siguiente
                 </Link>
               ) : <span />}
@@ -195,6 +200,6 @@ export default async function DirectorioPage({
           Escribe el nombre de un vecino o una unidad para comenzar la búsqueda.
         </div>
       ) : null}
-    </main>
+    </div>
   );
 }
