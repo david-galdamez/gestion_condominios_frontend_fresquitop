@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { requireRol } from '@/lib/auth';
 import { getAsambleas } from '@/lib/asambleas';
+import { PublicarButton } from './publicar-button';
 
 export const metadata: Metadata = { title: 'Asambleas' };
 
@@ -89,12 +90,15 @@ export default async function AsambleasPage() {
                     </span>
                   </td>
                   <td className="py-2">
-                    <Link
-                      href={`/admin/asambleas/${a.id}/resultados`}
-                      className="text-blue-600 hover:underline"
-                    >
-                      Ver resultados
-                    </Link>
+                    <div className="flex flex-wrap items-start gap-3">
+                      {a.estado === 'BORRADOR' && <PublicarButton id={a.id} />}
+                      <Link
+                        href={`/admin/asambleas/${a.id}/resultados`}
+                        className="text-blue-600 hover:underline"
+                      >
+                        Ver resultados
+                      </Link>
+                    </div>
                   </td>
                 </tr>
               ))}

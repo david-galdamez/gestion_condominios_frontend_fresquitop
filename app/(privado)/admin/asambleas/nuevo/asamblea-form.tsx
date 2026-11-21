@@ -40,7 +40,7 @@ export function AsambleaForm() {
       <div className="flex flex-col gap-1"><label className="text-sm font-medium">Descripcion</label><textarea rows={4} maxLength={1000} value={campos.descripcion} onChange={(e) => set('descripcion', e.target.value)} className={inputClass} /><p className="text-right text-xs text-zinc-500">{campos.descripcion.length}/1000</p>{errores.descripcion && <p className="text-sm text-red-600">{errores.descripcion}</p>}</div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="flex flex-col gap-1"><label className="text-sm font-medium">Apertura *</label><input type="datetime-local" value={campos.fechaApertura} onChange={(e) => set('fechaApertura', e.target.value)} className={inputClass} /></div>
+        <div className="flex flex-col gap-1"><label className="text-sm font-medium">Apertura *</label><input type="datetime-local" value={campos.fechaApertura} onChange={(e) => set('fechaApertura', e.target.value)} className={inputClass} /><p className="text-xs text-zinc-500">Para poder publicarla, la apertura debe ser al menos 48 horas después de publicar.</p></div>
         <div className="flex flex-col gap-1"><label className="text-sm font-medium">Cierre *</label><input type="datetime-local" value={campos.fechaCierre} onChange={(e) => set('fechaCierre', e.target.value)} className={inputClass} /></div>
       </div>
       {errores.cierre && <p className="text-sm text-red-600">{errores.cierre}</p>}
