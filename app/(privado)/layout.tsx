@@ -30,7 +30,8 @@ const MENU: { href: string; label: string; roles?: Rol[] }[] = [
   { href: "/admin/morosidad", label: "Morosidad", roles: ["ADMINISTRADOR"] },
   { href: "/admin/comunicados", label: "Comunicados", roles: ["ADMINISTRADOR"] },
   { href: "/admin/asambleas", label: "Asambleas", roles: ["ADMINISTRADOR"] },
-    { href: "/notificaciones", label: "Notificaciones", roles: ["RESIDENTE"] },
+  { href: "/notificaciones", label: "Notificaciones", roles: ["RESIDENTE"] },
+  { href: "/mis-paquetes", label: "Mis Paquetes", roles: ["RESIDENTE"] },
 ];
 
 export default async function PrivadoLayout({
