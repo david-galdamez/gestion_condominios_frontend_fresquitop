@@ -81,7 +81,12 @@ gestion_condominios_frontend_fresquitop
 │  │  │  │  ├─ nuevo
 │  │  │  │  │  ├─ asamblea-form.tsx
 │  │  │  │  │  └─ page.tsx
-│  │  │  │  └─ page.tsx
+│  │  │  │  ├─ page.tsx
+│  │  │  │  ├─ verificar
+│  │  │  │  │  └─ page.tsx
+│  │  │  │  └─ [id]
+│  │  │  │     └─ resultados
+│  │  │  │        └─ page.tsx
 │  │  │  ├─ comunicados
 │  │  │  │  ├─ lista-comunicados.tsx
 │  │  │  │  ├─ nuevo
@@ -96,16 +101,56 @@ gestion_condominios_frontend_fresquitop
 │  │  │  │  ├─ generar-form.tsx
 │  │  │  │  ├─ loading.tsx
 │  │  │  │  └─ page.tsx
-│  │  │  └─ morosidad
+│  │  │  ├─ morosidad
+│  │  │  │  ├─ error.tsx
+│  │  │  │  ├─ filtros-form.test.tsx
+│  │  │  │  ├─ filtros-form.tsx
+│  │  │  │  ├─ leer-filtros.test.tsx
+│  │  │  │  ├─ leer-filtros.tsx
+│  │  │  │  ├─ loading.tsx
+│  │  │  │  ├─ page.test.tsx
+│  │  │  │  ├─ page.tsx
+│  │  │  │  └─ reintentar-button.tsx
+│  │  │  ├─ panel
+│  │  │  │  ├─ error.tsx
+│  │  │  │  ├─ loading.tsx
+│  │  │  │  ├─ page.test.tsx
+│  │  │  │  ├─ page.tsx
+│  │  │  │  ├─ reintentar-button.tsx
+│  │  │  │  ├─ selector-periodo.tsx
+│  │  │  │  ├─ variacion.test.tsx
+│  │  │  │  └─ variacion.tsx
+│  │  │  └─ reportes
 │  │  │     ├─ error.tsx
-│  │  │     ├─ filtros-form.test.tsx
 │  │  │     ├─ filtros-form.tsx
-│  │  │     ├─ leer-filtros.test.tsx
-│  │  │     ├─ leer-filtros.tsx
 │  │  │     ├─ loading.tsx
 │  │  │     ├─ page.test.tsx
 │  │  │     ├─ page.tsx
-│  │  │     └─ reintentar-button.tsx
+│  │  │     └─ [id]
+│  │  │        ├─ asignacion-form.test.tsx
+│  │  │        ├─ asignacion-form.tsx
+│  │  │        ├─ not-found.tsx
+│  │  │        └─ page.tsx
+│  │  ├─ asambleas
+│  │  │  ├─ error.tsx
+│  │  │  ├─ loading.tsx
+│  │  │  ├─ page.tsx
+│  │  │  └─ [id]
+│  │  │     ├─ comprobantes-voto.tsx
+│  │  │     ├─ not-found.tsx
+│  │  │     ├─ page.tsx
+│  │  │     ├─ votacion-form.test.tsx
+│  │  │     └─ votacion-form.tsx
+│  │  ├─ comunicados
+│  │  │  ├─ contador-no-leidos.test.tsx
+│  │  │  ├─ contador-no-leidos.tsx
+│  │  │  ├─ lista-mis-comunicados.test.tsx
+│  │  │  ├─ lista-mis-comunicados.tsx
+│  │  │  ├─ loading.tsx
+│  │  │  ├─ page.tsx
+│  │  │  └─ [id]
+│  │  │     ├─ not-found.tsx
+│  │  │     └─ page.tsx
 │  │  ├─ directorio
 │  │  │  └─ mi-perfil
 │  │  │     ├─ error.tsx
@@ -164,6 +209,23 @@ gestion_condominios_frontend_fresquitop
 │  │  │  └─ [numero]
 │  │  │     ├─ not-found.tsx
 │  │  │     └─ page.tsx
+│  │  ├─ reservas
+│  │  │  ├─ disponibilidad
+│  │  │  │  ├─ disponibilidad-vista.test.tsx
+│  │  │  │  ├─ disponibilidad-vista.tsx
+│  │  │  │  ├─ loading.tsx
+│  │  │  │  ├─ page.test.tsx
+│  │  │  │  └─ page.tsx
+│  │  │  ├─ error.tsx
+│  │  │  ├─ lista-reservas.test.tsx
+│  │  │  ├─ lista-reservas.tsx
+│  │  │  ├─ loading.tsx
+│  │  │  ├─ nueva
+│  │  │  │  ├─ page.tsx
+│  │  │  │  ├─ reserva-form-prellenado.test.tsx
+│  │  │  │  ├─ reserva-form.test.tsx
+│  │  │  │  └─ reserva-form.tsx
+│  │  │  └─ page.tsx
 │  │  ├─ sin-permiso
 │  │  │  └─ page.tsx
 │  │  └─ visitas
@@ -198,6 +260,9 @@ gestion_condominios_frontend_fresquitop
 │  │  ├─ paquetes.ts
 │  │  ├─ perfil-directorio.test.ts
 │  │  ├─ perfil-directorio.ts
+│  │  ├─ reportes.ts
+│  │  ├─ reservas.test.ts
+│  │  ├─ reservas.ts
 │  │  ├─ visitas.test.ts
 │  │  └─ visitas.ts
 │  ├─ api
@@ -207,9 +272,11 @@ gestion_condominios_frontend_fresquitop
 │  │  │     └─ fotos
 │  │  │        └─ [fotoId]
 │  │  │           └─ route.ts
-│  │  └─ sesion
-│  │     └─ expirada
-│  │        └─ route.ts
+│  │  ├─ sesion
+│  │  │  └─ expirada
+│  │  │     └─ route.ts
+│  │  └─ verificar-comprobante
+│  │     └─ route.ts
 │  ├─ directorio
 │  │  └─ page.tsx
 │  ├─ favicon.ico
@@ -230,6 +297,9 @@ gestion_condominios_frontend_fresquitop
 │  ├─ estado-cuota-badge.test.tsx
 │  ├─ estado-cuota-badge.tsx
 │  ├─ estado-reporte-badge.tsx
+│  ├─ estado-reserva-badge.test.tsx
+│  ├─ estado-reserva-badge.tsx
+│  ├─ prioridad-reporte-badge.tsx
 │  └─ session-provider.tsx
 ├─ docs
 │  ├─ 01-guia-de-uso.md
@@ -249,8 +319,12 @@ gestion_condominios_frontend_fresquitop
 │  ├─ areas.ts
 │  ├─ asambleas.ts
 │  ├─ auth.ts
+│  ├─ comunicados-ui.test.ts
+│  ├─ comunicados-ui.ts
 │  ├─ comunicados.ts
 │  ├─ cuotas.ts
+│  ├─ disponibilidad.test.ts
+│  ├─ disponibilidad.ts
 │  ├─ estado-cuenta.test.ts
 │  ├─ estado-cuenta.ts
 │  ├─ format.test.ts
@@ -259,6 +333,10 @@ gestion_condominios_frontend_fresquitop
 │  ├─ morosidad.ts
 │  ├─ pagos.test.ts
 │  ├─ pagos.ts
+│  ├─ panel-periodo.test.ts
+│  ├─ panel-periodo.ts
+│  ├─ panel.test.ts
+│  ├─ panel.ts
 │  ├─ paquetes.test.ts
 │  ├─ paquetes.ts
 │  ├─ perfil-directorio.test.ts
@@ -267,6 +345,8 @@ gestion_condominios_frontend_fresquitop
 │  ├─ reportes-validacion.test.ts
 │  ├─ reportes-validacion.ts
 │  ├─ reportes.ts
+│  ├─ reservas.test.ts
+│  ├─ reservas.ts
 │  ├─ session.ts
 │  ├─ stores
 │  │  └─ session-store.ts
@@ -276,12 +356,15 @@ gestion_condominios_frontend_fresquitop
 │  │  ├─ asambleas.ts
 │  │  ├─ comunicados.ts
 │  │  ├─ cuotas.ts
+│  │  ├─ disponibilidad.ts
 │  │  ├─ estado-cuenta.ts
 │  │  ├─ morosidad.ts
 │  │  ├─ pagos.ts
+│  │  ├─ panel.ts
 │  │  ├─ paquetes.ts
 │  │  ├─ perfil-directorio.ts
 │  │  ├─ reportes.ts
+│  │  ├─ reservas.ts
 │  │  └─ visitas.ts
 │  ├─ validaciones
 │  │  ├─ acceso.test.ts
@@ -293,12 +376,18 @@ gestion_condominios_frontend_fresquitop
 │  │  ├─ comunicado.ts
 │  │  ├─ cuota.test.ts
 │  │  ├─ cuota.ts
+│  │  ├─ disponibilidad.test.ts
+│  │  ├─ disponibilidad.ts
 │  │  ├─ pago.test.ts
 │  │  ├─ pago.ts
 │  │  ├─ paquete.test.ts
 │  │  ├─ paquete.ts
 │  │  ├─ perfil-directorio.test.ts
 │  │  ├─ perfil-directorio.ts
+│  │  ├─ reporte-asignacion.test.ts
+│  │  ├─ reporte-asignacion.ts
+│  │  ├─ reserva.test.ts
+│  │  ├─ reserva.ts
 │  │  ├─ visita.test.ts
 │  │  └─ visita.ts
 │  ├─ visitas.test.ts
