@@ -60,3 +60,15 @@ export function obtenerMetaModuloOrigen(
     clases: MODULO_ORIGEN_FALLBACK_CLASES,
   };
 }
+
+// Convierte la `referencia` que guarda el backend en una ruta navegable de la
+// app. Algunas referencias no coinciden con las rutas del frontend (p. ej. el
+// backend guarda /paquetes/:id y la página del residente es /mis-paquetes/:id).
+// Devuelve null si no hay destino o no es una ruta interna segura.
+export function rutaDeReferencia(referencia: string | null): string | null {
+  const ref = referencia?.trim();
+  if (!ref || !ref.startsWith("/") || ref.startsWith("//")) return null;
+  if (ref === "/paquetes") return "/mis-paquetes";
+  if (ref.startsWith("/paquetes/")) return `/mis-paquetes/${ref.slice("/paquetes/".length)}`;
+  return ref;
+}
