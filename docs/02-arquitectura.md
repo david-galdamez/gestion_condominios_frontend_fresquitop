@@ -44,6 +44,7 @@ gestion_condominios_frontend_fresquitop
 │   │   ├── visitas/           # H07, H07b (lista, nueva, [id]/editar)
 │   │   ├── reportes/          # H05
 │   │   ├── comunicados/       # H14 (lista con pestañas y contador, [id] detalle)
+│   │   ├── directorio/        # H16 búsqueda de vecinos y mi-perfil (H15); dentro de (privado) desde 1.0.1
 │   │   ├── porteria/paquetes/ # H09
 │   │   └── admin/             # areas (H03), morosidad (H22), comunicados (H13)
 │   ├── actions/               # Server Actions: validan y llaman a lib/*
