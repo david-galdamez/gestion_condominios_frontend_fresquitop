@@ -44,8 +44,20 @@ describe("guardarPerfilDirectorio", () => {
       mostrarUnidad: false,
       mostrarTelefono: false,
       mostrarCorreo: false,
+      telefono: null,
     });
     expect(revalidatePath).toHaveBeenCalledWith("/directorio/mi-perfil");
+  });
+
+  it("normaliza el teléfono y lo envía; uno inválido no llama a la API (hotfix 1.0.1)", async () => {
+    guardar.mockResolvedValue({ status: "ok", data: { visible: true } });
+    await guardarPerfilDirectorio(idle, fd({ telefono: "7044 2727", mostrarTelefono: "true" }));
+    expect(guardar).toHaveBeenLastCalledWith(expect.objectContaining({ telefono: "7044-2727", mostrarTelefono: true }));
+
+    guardar.mockClear();
+    const r = await guardarPerfilDirectorio(idle, fd({ telefono: "1234" }));
+    expect(r.error).toBe("El teléfono debe tener 8 dígitos y empezar con 2, 6 o 7 (ej. 7044-2727)");
+    expect(guardar).not.toHaveBeenCalled();
   });
 
   it("400, 403 y error del servidor", async () => {
