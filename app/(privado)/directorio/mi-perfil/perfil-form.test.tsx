@@ -59,7 +59,7 @@ describe("PerfilForm", () => {
     expect(guardarPerfilDirectorio).not.toHaveBeenCalled();
   });
 
-  it("Guardar manda las 5 opciones (incluidas las deshabilitadas) y muestra 'Preferencias guardadas'", async () => {
+  it("Guardar manda las 5 opciones (incluidas las deshabilitadas) y el teléfono, y muestra 'Preferencias guardadas'", async () => {
     const user = userEvent.setup();
     guardarPerfilDirectorio.mockResolvedValue({ status: "ok", perfil: oculto });
     render(<PerfilForm perfil={oculto} />);
@@ -74,6 +74,7 @@ describe("PerfilForm", () => {
       mostrarUnidad: "false",
       mostrarTelefono: "false",
       mostrarCorreo: "true",
+      telefono: "",
     });
     expect(await screen.findByRole("status")).toHaveTextContent("Preferencias guardadas");
   });
@@ -94,5 +95,48 @@ describe("PerfilForm", () => {
     render(<PerfilForm perfil={{ ...oculto, visible: true, mostrarNombre: true }} />);
     await user.click(screen.getByRole("button", { name: "Guardar" }));
     expect(await screen.findByRole("alert")).toHaveTextContent("No pudimos guardar. Intenta de nuevo.");
+  });
+
+  describe("teléfono (hotfix 1.0.1)", () => {
+    it("muestra el teléfono guardado y lo actualiza en la vista previa al escribir", async () => {
+      const user = userEvent.setup();
+      render(
+        <PerfilForm
+          perfil={{ ...oculto, visible: true, mostrarTelefono: true, misDatos: { ...oculto.misDatos, telefono: "2222-3333" } }}
+        />,
+      );
+      const campo = screen.getByRole("textbox", { name: "Teléfono" });
+      expect(campo).toHaveValue("2222-3333");
+      expect(vista()).toHaveTextContent("2222-3333");
+      await user.clear(campo);
+      await user.type(campo, "70442727");
+      expect(vista()).toHaveTextContent("7044-2727");
+      expect(screen.getByRole("checkbox", { name: /Teléfono/ }).parentElement).toHaveTextContent("7044-2727");
+    });
+
+    it("formato inválido avisa y deshabilita Guardar", async () => {
+      const user = userEvent.setup();
+      render(<PerfilForm perfil={{ ...oculto, visible: true, mostrarNombre: true }} />);
+      await user.type(screen.getByRole("textbox", { name: "Teléfono" }), "1234");
+      expect(screen.getByRole("alert")).toHaveTextContent("El teléfono debe tener 8 dígitos");
+      expect(screen.getByRole("button", { name: "Guardar" })).toBeDisabled();
+    });
+
+    it("marcar Teléfono sin registrarlo avisa", async () => {
+      const user = userEvent.setup();
+      render(<PerfilForm perfil={{ ...oculto, visible: true }} />);
+      await user.click(screen.getByRole("checkbox", { name: /Teléfono/ }));
+      expect(screen.getByRole("alert")).toHaveTextContent("Registra tu teléfono para poder mostrarlo");
+    });
+
+    it("Guardar envía el teléfono escrito", async () => {
+      const user = userEvent.setup();
+      guardarPerfilDirectorio.mockResolvedValue({ status: "ok", perfil: oculto });
+      render(<PerfilForm perfil={{ ...oculto, visible: true, mostrarNombre: true }} />);
+      await user.type(screen.getByRole("textbox", { name: "Teléfono" }), "7044 2727");
+      await user.click(screen.getByRole("button", { name: "Guardar" }));
+      await waitFor(() => expect(guardarPerfilDirectorio).toHaveBeenCalledTimes(1));
+      expect((guardarPerfilDirectorio.mock.calls[0][1] as FormData).get("telefono")).toBe("7044 2727");
+    });
   });
 });

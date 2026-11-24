@@ -1,9 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
   MSG_AL_MENOS_UN_DATO,
+  MSG_SIN_TELEFONO,
+  MSG_TELEFONO,
+  normalizarTelefono,
   opcionesDesdeFormData,
   PERFIL_OCULTO,
   validarPerfil,
+  validarTelefono,
   vistaPrevia,
 } from "./perfil-directorio";
 
@@ -35,5 +39,34 @@ describe("validaciones de perfil de directorio", () => {
     expect(opcionesDesdeFormData(f)).toBeNull();
     f.delete("mostrarCorreo");
     expect(opcionesDesdeFormData(f)).toBeNull();
+  });
+
+  describe("teléfono (hotfix 1.0.1)", () => {
+    it.each([
+      ["70442727", "7044-2727"],
+      [" 2222 3333 ", "2222-3333"],
+      ["6123-4567", "6123-4567"],
+      ["", null],
+      ["   ", null],
+    ])("normalizarTelefono(%j) -> %j", (entrada, esperado) => {
+      expect(normalizarTelefono(entrada)).toBe(esperado);
+    });
+
+    it("validarTelefono: igual que el backend", () => {
+      expect(validarTelefono("7044-2727")).toBeUndefined();
+      expect(validarTelefono("")).toBeUndefined();
+      for (const malo of ["1234-5678", "7044-272", "+503 7044 2727", "abc"]) {
+        expect(validarTelefono(malo)).toBe(MSG_TELEFONO);
+      }
+    });
+
+    it("validarPerfil: no se puede mostrar un teléfono vacío", () => {
+      const o = { ...PERFIL_OCULTO, visible: true, mostrarTelefono: true };
+      expect(validarPerfil(o, "")).toBe(MSG_SIN_TELEFONO);
+      expect(validarPerfil(o, "7044-2727")).toBeUndefined();
+      expect(validarPerfil(o, "123")).toBe(MSG_TELEFONO);
+      // Sin teléfono (solo opciones) mantiene la regla original.
+      expect(validarPerfil(o)).toBeUndefined();
+    });
   });
 });
